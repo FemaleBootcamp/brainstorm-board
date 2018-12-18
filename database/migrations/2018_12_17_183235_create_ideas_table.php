@@ -21,6 +21,7 @@ class CreateIdeasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedInteger('board_id');
             $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
