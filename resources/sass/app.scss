@@ -1,6 +1,6 @@
 
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
 
 // Variables
 @import 'variables';
@@ -8,7 +8,85 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+// Custom Css
+@import 'customize';
+
+
+// Main
+
+body{
+	font-family: $font-family;
+	color: $textColor;
+}
+
+.font-md{
+	font-size: $medium-font;
+}
+
+// colors
+
+.bg-primary{
+    background: $magenta!important;
+}
+
+.bg-secondary{
+    background: $turquoise;
+}
+
+.bg-blue{
+    background: $blue;
+}
+
+.bg-gray{
+    background: $midgrey;
+}
+
+.white{
+    color: white;
+}
+
+// buttons
+
+.btn-primary{
+	background: $magenta;
+	color: white;
+    border: none;
+}
+.btn-secondary{
+	background: $turquoise;
+	color: white;
+    border: none;
+}
+
+.btn-blue{
+	background: $blue;
+	color: white;
+    border: none;
+}
+
+.button-outline{
+	text-transform: uppercase;
+    border: 2px solid $magenta;
+    color: $buttonColor;
+    border-radius: 15px;
+    padding: 0.5em 2rem;
+    transition: all 0.2s ease-in;
+    &:hover{
+    	color: white;
+    	background: $magenta;
+    }
+}
+
+.green-border{
+    border: 2px solid $turquoise;
+    &:hover{
+    	background: $turquoise;
+    }
+}
+
+.blue-border{
+    border: 2px solid $blue;
+    &:hover{
+    	backgound: $blue;
+    }
 }
