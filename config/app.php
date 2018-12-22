@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Brainstorm Boards'),
+    'name' => env('APP_NAME', 'Brainstorm Board'),
 
     /*
     |--------------------------------------------------------------------------
