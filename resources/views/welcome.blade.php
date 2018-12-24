@@ -31,13 +31,13 @@
                 <!-- Main Text + Login/Registration -->
                 <div class="col-lg-4 col-md-12 col-sm-12 cl-xs-12 d-flex justify-content-center align-items-center flex-column fade-el-wait">
                     <p class="font-md">
-                        The Brainstorm Board is a web applications that allows users to log in and create an online board for brainstorming. It simulates the usual sticker board and allows for collaboration among multiple users. The user that creates the board can share its unique URL with their collaborators, so everyone can have access to it and be able to add new ideas.
+                        The Brainstorm Board is a web application that allows users to log in and create an online board for brainstorming. It simulates the usual sticker board and allows for collaboration among multiple users. The user that creates the board can share its unique URL with their collaborators, so everyone can have access to it and be able to add new ideas.
                     </p>
                     <br>
                     <div class="align-self-start">
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/home') }}" class="btn btn-lg btn-outline">Home</a>
+                                <a href="{{ url('/home') }}" class="btn btn-lg button-outline">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-lg button-outline mr-4">Login</a>
 

@@ -1,5 +1,3 @@
-
-
 // *************
 // Welcome Page Start
 // **************
@@ -238,7 +236,7 @@
   .navbar-brand, .navbar-nav .nav-link{
     color: white;
     font-weight: 700;
-    &:hover{
+    &:hover, &:visited, &:focus{
       color: rgba(255,255,255,.8);
     }
   }
@@ -246,4 +244,28 @@
 
 // *************
 // Login Page End
+// **************
+
+// *************
+// Dashboard Page Start
+// **************
+
+#dashboard-page{
+
+  .card{
+    border: 2px solid rgba(0, 0, 0, 0.125);
+  }
+  #dashboardTable{
+    th, tr{
+      padding: 15px;
+    }
+  }
+  .table-sm th, .table-sm td{
+    padding: 0.6rem;
+  }
+
+}
+
+// *************
+// Dashboard Page End
 // **************
