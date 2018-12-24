@@ -15,14 +15,11 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app" class="fade-el">
+    <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel bg-primary">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -33,11 +30,6 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -47,7 +39,7 @@
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link white" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -74,9 +66,12 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4 fade-el">
             @yield('content')
         </main>
     </div>
 </body>
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
+@yield('scripts')
 </html>

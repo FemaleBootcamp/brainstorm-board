@@ -9776,8 +9776,26 @@ a.text-dark:focus {
 }
 
 .navbar-light .navbar-brand:hover,
-.navbar-light .navbar-nav .nav-link:hover {
+.navbar-light .navbar-brand:visited,
+.navbar-light .navbar-brand:focus,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:visited,
+.navbar-light .navbar-nav .nav-link:focus {
   color: rgba(255, 255, 255, 0.8);
+}
+
+#dashboard-page .card {
+  border: 2px solid rgba(0, 0, 0, 0.125);
+}
+
+#dashboard-page #dashboardTable th,
+#dashboard-page #dashboardTable tr {
+  padding: 15px;
+}
+
+#dashboard-page .table-sm th,
+#dashboard-page .table-sm td {
+  padding: 0.6rem;
 }
 
 body {
@@ -9801,6 +9819,10 @@ body {
   background: #4588ff;
 }
 
+.bg-lightgray {
+  background: #f8f8f8;
+}
+
 .bg-gray {
   background: #eaeaea;
 }
@@ -9813,18 +9835,39 @@ body {
   background: #ff4d96;
   color: white;
   border: none;
+  transition: all 0.2s ease-in;
+}
+
+.btn-primary:hover {
+  border: none;
+  background: #ccc;
+  color: white;
 }
 
 .btn-secondary {
   background: #22d1b8;
   color: white;
   border: none;
+  transition: all 0.2s ease-in;
+}
+
+.btn-secondary:hover {
+  border: none;
+  background: #ccc;
+  color: white;
 }
 
 .btn-blue {
   background: #4588ff;
   color: white;
   border: none;
+  transition: all 0.2s ease-in;
+}
+
+.btn-blue:hover {
+  border: none;
+  background: #ccc;
+  color: white;
 }
 
 .button-outline {
@@ -9839,6 +9882,7 @@ body {
 .button-outline:hover {
   color: white;
   background: #ff4d96;
+  text-decoration: none;
 }
 
 .green-border {

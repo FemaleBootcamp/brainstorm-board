@@ -36,9 +36,12 @@ body{
 .bg-blue{
     background: $blue;
 }
+.bg-lightgray{
+    background: $lightgray;
+}
 
 .bg-gray{
-    background: $midgrey;
+    background: $midgray;
 }
 
 .white{
@@ -47,21 +50,35 @@ body{
 
 // buttons
 
+@mixin button-style{
+    color: white;
+    border: none;
+    transition: all 0.2s ease-in;
+}
+
+@mixin hover-btn{
+    &:hover{
+        border: none;
+        background: #ccc;
+        color: white;
+    }
+}
+
 .btn-primary{
 	background: $magenta;
-	color: white;
-    border: none;
+    @include button-style;
+    @include hover-btn;
 }
 .btn-secondary{
 	background: $turquoise;
-	color: white;
-    border: none;
+    @include button-style;
+    @include hover-btn;
 }
 
 .btn-blue{
 	background: $blue;
-	color: white;
-    border: none;
+    @include button-style;
+    @include hover-btn;
 }
 
 .button-outline{
@@ -74,6 +91,7 @@ body{
     &:hover{
     	color: white;
     	background: $magenta;
+        text-decoration: none;
     }
 }
 
@@ -90,3 +108,9 @@ body{
     	backgound: $blue;
     }
 }
+
+// .custom-button{
+//     border: 15px;
+//     padding: 0px;
+//     height: auto;
+// }
