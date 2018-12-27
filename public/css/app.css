@@ -9798,6 +9798,10 @@ a.text-dark:focus {
   padding: 0.6rem;
 }
 
+#dashboard-page .is-active {
+  display: block;
+}
+
 body {
   font-family: "Lato", sans-serif;
   color: #333;

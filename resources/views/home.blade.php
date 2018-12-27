@@ -4,7 +4,23 @@
 <div class="container" id="dashboard-page">
     <div class="row d-flex justify-content-between mb-md-5">
         <h2>Current Boards</h2>
-        <a href="#" class="button-outline green-border">Create board</a>
+        <a href="#" class="button-outline green-border" @click="showModal = true">Create board</a>
+        <!-- Modal -->
+        <bb-modal v-show="showModal" @close="showModal = false">
+          <h5 class="modal-title" slot="title">Create your board</h5>
+          <template slot="body">
+            <form>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Board title</label>
+                <input type="boardTitle" class="form-control" id="exampleInputboardTitle1" aria-describedby="boardTitleHelp">
+              </div>
+            </form>
+          </template>
+          <template slot="footer">
+            <button type="button" class="btn btn-secondary">Create</button>
+          </template>
+        </bb-modal>
+        <!-- Modal end -->
     </div>
     <div class="row justify-content-center">
         <div class="col px-0 card table-responsive">
