@@ -37,7 +37,7 @@
                     <div class="align-self-start">
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/home') }}" class="btn btn-lg button-outline">Dashboard</a>
+                                <a href="{{ url('/boards') }}" class="btn btn-lg button-outline">Dashboard</a>
                             @else
                                 <a href="{{ route('login') }}" class="btn btn-lg button-outline mr-4">Login</a>
 
