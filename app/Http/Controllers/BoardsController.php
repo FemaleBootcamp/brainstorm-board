@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Board;
 use Response;
+use App\Http\Requests\StoreBoard;
 
 class BoardsController extends Controller
 {
@@ -29,9 +30,9 @@ class BoardsController extends Controller
         return view('board', compact('boards'));
     }
 
-    public function store(){
+    public function store(StoreBoard $request){
 
-        request()->validate(['title' => ['required','min:3']]);
+        $validated = $request->validated();
         $boards = new Board;
         $boards->title = request('title');
         $boards->user_id = auth()->id();
