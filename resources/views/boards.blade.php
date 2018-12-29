@@ -9,7 +9,7 @@
         <bb-modal v-show="showModal" @close="showModal = false">
           <h5 class="modal-title" slot="title">Create your board</h5>
           <template slot="body">
-            <form method="POST" action="/board">
+            <form method="POST" action="/boards">
               @csrf()
               <div class="form-group">
                 <label for="exampleInputEmail1">Board title</label>
@@ -41,7 +41,7 @@
                   <td>
                       <a href="#" class="btn btn-primary btn-sm">View</a>
                       <a href="#" class="btn btn-blue btn-sm">Edit</a>
-                      <form method="POST" action="/board/{{ $board->id }}" class="d-inline">
+                      <form method="POST" action="/boards/{{ $board->id }}" class="d-inline">
                         @method('DELETE')
                         @csrf()
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -57,9 +57,4 @@
     </div>
 </div>
 @endsection
-@section('scripts')
-<script type="text/javascript">
-    // document.getElementById("create-board").submit();
 
-</script>
-@endsection

@@ -27,7 +27,7 @@ class BoardsController extends Controller
     public function index()
     {
         $boards = Board::all();
-        return view('board', compact('boards'));
+        return view('boards', compact('boards'));
     }
 
     /**
