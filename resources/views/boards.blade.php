@@ -41,7 +41,11 @@
                   <td>
                       <a href="#" class="btn btn-primary btn-sm">View</a>
                       <a href="#" class="btn btn-blue btn-sm">Edit</a>
-                      <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                      <form method="POST" action="/boards/{{ $board->id }}" class="d-inline">
+                        @method('DELETE')
+                        @csrf()
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
                   </td>
                 </tr>
                 @endforeach

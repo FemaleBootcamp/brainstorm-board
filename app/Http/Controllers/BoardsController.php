@@ -55,7 +55,6 @@ class BoardsController extends Controller
         $boards->save();
 
         return response()->json($boards);
-
     }
 
     /**
@@ -100,7 +99,9 @@ class BoardsController extends Controller
      */
     public function destroy($id)
     {
+        Board::findOrFail($id)->delete();
 
+        return response()->json(['status' => 'success'], 204);
     }
 }
 

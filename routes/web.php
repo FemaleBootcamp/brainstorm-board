@@ -17,4 +17,5 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
 Route::resource('boards', 'BoardsController');
