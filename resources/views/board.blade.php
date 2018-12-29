@@ -1,53 +1,61 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container" id="board-page">
-    <div class="row d-flex justify-content-center mb-3">
-        <h2 class="p-3 rounded bg-primary white"><i class="far fa-lightbulb"></i> Idea Board</h2><br>
+<div class="container" id="dashboard-page">
+    <div class="row d-flex justify-content-between mb-md-5">
+        <h2>Current Boards</h2>
+        <a href="#" class="button-outline green-border" @click="showModal = true">Create board</a>
+        <!-- Modal -->
+        <bb-modal v-show="showModal" @close="showModal = false">
+          <h5 class="modal-title" slot="title">Create your board</h5>
+          <template slot="body">
+            <form method="POST" action="/board">
+              @csrf()
+              <div class="form-group">
+                <label for="exampleInputEmail1">Board title</label>
+                <input type="boardTitle" class="form-control" id="exampleInputboardTitle1" name="title" aria-describedby="boardTitleHelp">
+              </div>
+              <button class="btn btn-secondary" id="create-board" type="submit">Create</button>
+            </form>
+          </template>
+        </bb-modal>
+        <!-- Modal end -->
     </div>
-    <div class="row justify-content-center mb-3">
-        <a href="#" class="button-outline green-border idea-btn">New Idea</a>
-    </div>
-    <div class="row justify-content-center mb-3">
-      <div class="input-group col-md-5 col-sm-12 col-xs-12">
-        <select class="custom-select" id="inputGroupSelect04">
-          <option selected disabled>Sort ideas by...</option>
-          <option value="1">Alphabetical order</option>
-          <option value="2">Date</option>
-          <option value="3">Author</option>
-        </select>
-      </div>
-    </div>
-    <!-- Sticky notes -->
-    <div class="row d-flex bg-lightgray p-3 pt-lg-5 mt-4 rounded gray-border justify-content-around">
-      <!-- Note Start -->
-      <div class="card sticky-notes mb-5">
-        <div class="card-header bg-primary">
-          <textarea name="title" cols="30" rows="1" class="bold white">My new idea</textarea>
+    <div class="row justify-content-center">
+        <div class="col px-0 card table-responsive">
+            <table id="dashboardTable" class="table table-bordered table-sm text-center" cellspacing="0" width="100%">
+              <thead class="bg-lightgray">
+                <tr>
+                  <th class="th-sm">Title</th>
+                  <th class="th-sm">Date</th>
+                  <th class="th-sm">Author</th>
+                  <th class="th-sm">Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($boards as $board)
+                <tr>
+                  <td>{{ $board->title }}</td>
+                  <td>{{ $board->created_at }}</td>
+                  <td>{{ $board->user_id }}</td>
+                  <td>
+                      <a href="#" class="btn btn-primary btn-sm">View</a>
+                      <a href="#" class="btn btn-blue btn-sm">Edit</a>
+                      <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+              <tfoot>
+              </tfoot>
+            </table>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><textarea name="description" cols="30" rows="8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam justo turpis, ornare ac magna id, auctor congue risus. Nunc urna dui, tristique non dolor sed, scelerisque tempor nisl.</textarea></li>
-        </ul>
-      </div>
-      <!-- Note Start -->
-      <div class="card sticky-notes mb-5">
-        <div class="card-header bg-secondary">
-          <textarea name="title" cols="30" rows="1" class="bold white">My second idea</textarea>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><textarea name="description" cols="30" rows="8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam justo turpis, ornare ac magna id, auctor congue risus. Nunc urna dui, tristique non dolor sed, scelerisque tempor nisl.</textarea></li>
-        </ul>
-      </div>
-      <!-- Note Start -->
-      <div class="card sticky-notes mb-5">
-        <div class="card-header bg-blue">
-          <textarea name="title" cols="30" rows="1" class="bold white">My third idea</textarea>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><textarea name="description" cols="30" rows="8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam justo turpis, ornare ac magna id, auctor congue risus. Nunc urna dui, tristique non dolor sed, scelerisque tempor nisl.</textarea></li>
-        </ul>
-      </div>
     </div>
 </div>
 @endsection
+@section('scripts')
+<script type="text/javascript">
+    // document.getElementById("create-board").submit();
 
+</script>
+@endsection
