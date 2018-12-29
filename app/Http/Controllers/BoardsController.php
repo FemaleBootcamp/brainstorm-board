@@ -54,9 +54,7 @@ class BoardsController extends Controller
         $boards->user_id = auth()->id();
         $boards->save();
 
-        // return response()->json($boards);
-
-        return redirect('/board');
+        return response()->json($boards);
     }
 
     /**
