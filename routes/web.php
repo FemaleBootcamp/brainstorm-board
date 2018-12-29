@@ -17,5 +17,4 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/board', 'BoardsController@index');
-Route::post('/board', 'BoardsController@store');
+Route::resource('boards', 'BoardsController');

@@ -9,7 +9,7 @@
         <bb-modal v-show="showModal" @close="showModal = false">
           <h5 class="modal-title" slot="title">Create your board</h5>
           <template slot="body">
-            <form method="POST" action="/board">
+            <form method="POST" action="/boards">
               @csrf()
               <div class="form-group">
                 <label for="exampleInputEmail1">Board title</label>
@@ -53,9 +53,4 @@
     </div>
 </div>
 @endsection
-@section('scripts')
-<script type="text/javascript">
-    // document.getElementById("create-board").submit();
 
-</script>
-@endsection
