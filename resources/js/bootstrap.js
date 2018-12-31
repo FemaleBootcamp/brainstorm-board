@@ -2,13 +2,15 @@ import Vue from 'vue';
 
 import axios from 'axios';
 
+import BootstrapVue from 'bootstrap-vue'
 
 window.Vue = Vue;
 
 window.axios = axios;
 
-window._ = require('lodash');
+Vue.use(BootstrapVue);
 
+window._ = require('lodash');
 
 try {
     window.Popper = require('popper.js').default;

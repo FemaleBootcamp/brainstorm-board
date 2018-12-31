@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Board;
+use App\User;
 use Response;
 use App\Http\Requests\StoreBoard;
 
@@ -24,10 +25,10 @@ class BoardsController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $boards = Board::all();
-        return view('boards', compact('boards'));
+        $boards = Board::with('user')->get();
+        return response()->json($boards);
     }
 
     /**
@@ -54,7 +55,10 @@ class BoardsController extends Controller
         $boards->user_id = auth()->id();
         $boards->save();
 
-        return response()->json($boards);
+        if (request()->wantsJson()) {
+            return response($boards, 201);
+        }
+        return back();
     }
 
     /**
@@ -100,7 +104,6 @@ class BoardsController extends Controller
     public function destroy($id)
     {
         Board::findOrFail($id)->delete();
-
         return response()->json(['status' => 'success'], 204);
     }
 }
