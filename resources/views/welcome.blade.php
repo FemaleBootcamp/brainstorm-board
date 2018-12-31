@@ -51,11 +51,11 @@
                 <!-- Feature Menu -->
                 <div class="feature-menu col-lg-4 col-md-12 col-sm-12 col-xs-12 p-0 pl-md-5 mt-5 fade-el-wait">
                     <div class="sticky-menu bg-primary white d-flex justify-content-center align-items-center flex-column ml-md-5 p-5">
-                        <i class="far fa-sticky-note pb-2"></i> 
+                        <i class="far fa-sticky-note pb-2"></i>
                         <p>Share your ideas!</p>
                     </div>
                     <div class="sticky-menu bg-blue mt-5 white d-flex justify-content-center align-items-center ml-md-5 flex-column p-5">
-                        <i class="far fa-star pb-2"></i> 
+                        <i class="far fa-star pb-2"></i>
                         <p>What makes us great?</p>
                     </div>
                 </div>
