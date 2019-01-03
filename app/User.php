@@ -2,11 +2,9 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Board;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -30,7 +28,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function boards(){
+    public function boards()
+    {
         return $this->hasMany(Board::class);
     }
 }
