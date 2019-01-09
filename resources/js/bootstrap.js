@@ -6,12 +6,12 @@ import BootstrapVue from 'bootstrap-vue';
 
 import VueSweetalert2 from 'vue-sweetalert2';
 
-Vue.use(VueSweetalert2, options);
-
 const options = {
     confirmButtonColor: '#ff4d96',
     cancelButtonColor: '#22d1b8'
 }
+
+Vue.use(VueSweetalert2, options);
 
 window.Vue = Vue;
 
