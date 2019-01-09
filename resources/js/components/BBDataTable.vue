@@ -1,7 +1,10 @@
 <template>
     <div>
-        <b-alert variant="danger" dismissible :show="show" @dismissed="show=false">
+        <b-alert class="fade-el" variant="danger" dismissible :show="showDeleted" @dismissed="showDeleted=false">
             You have successfully deleted the record!
+        </b-alert>
+        <b-alert class="fade-el" variant="info" dismissible :show="showAdded" @dismissed="showAdded=false">
+            You have successfully added the record!
         </b-alert>
         <table id="dashboardTable" class="table table-bordered table-sm text-center" cellspacing="0" width="100%">
             <thead class="bg-lightgray">
@@ -14,9 +17,9 @@
             </thead>
             <tbody>
                 <tr v-for="board in boards" :key="board.id">
-                    <td>{{ board.title }}</td>
-                    <td>{{ formatDate(board.created_at) }}</td>
-                    <td>{{ board.user.name }}</td>
+                    <td :title="title">{{ board.title }}</td>
+                    <td :date="date">{{ formatDate(board.created_at) }}</td>
+                    <td :user="user">{{ board.user.name }}</td>
                     <td>
                         <a href="#" class="btn btn-primary btn-sm">View</a>
                         <a href="#" class="btn btn-blue btn-sm">Edit</a>
@@ -30,44 +33,59 @@
     </div>
 </template>
 <script>
-import moment from 'moment';
-import Board from '../models/Board';
+    import moment from 'moment';
+    import Board from '../models/Board';
 
-export default {
+    export default {
 
-    data() {
+        data() {
 
-        return {
+            return {
 
-            boards: [],
-            show: false
+                boards: [],
+                showDeleted: false,
+                showAdded: false,
+                title: '',
+                date: '',
+                user: ''
 
-        }
+            }
 
-    },
-
-    created() {
-
-        Board.all(boards => this.boards = boards);
-
-    },
-
-    methods: {
-
-        formatDate(board) {
-            return moment(board.created_at).format('MM/DD/YYYY');
         },
 
-        deleteBoard(id) {
-            axios.post(`/boards/${id}`, { params: { id: `${id}` }, _method: 'delete' }).then(() => {
-                let index = this.boards.findIndex(board => board.id === id);
-                this.boards.splice(index, 1);
-                this.show = true;
-            });
+        mounted() {
+            Board.all(boards => this.boards = boards);
+        },
+
+        created() {
+            Event.$on('submit', () => Board.all(boards => this.boards = boards));
+            Event.$on('submit', () => this.showAdded = true);
+        },
+
+        methods: {
+
+            formatDate(board) {
+                return moment(board.created_at).format('MM/DD/YYYY');
+            },
+
+            deleteBoard(id) {
+                axios.post(`/boards/${id}`, {
+                    params: {
+                        id: `${id}`
+                    },
+                    _method: 'delete'
+                }).then(() => {
+                    let index = this.boards.findIndex(board => board.id === id);
+                    this.boards.splice(index, 1);
+                    this.showDeleted = true;
+                }).catch(error => {
+                    this.$swal("Something is wrong! We're not able to delete the board.");
+                });
+
+            }
+
         }
 
     }
-
-}
 
 </script>
