@@ -1766,6 +1766,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _models_Board__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/Board */ "./resources/js/models/Board.js");
+/* harmony import */ var _models_Errors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/Errors */ "./resources/js/models/Errors.js");
+/* harmony import */ var _components_BBModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/BBModal */ "./resources/js/components/BBModal.vue");
 //
 //
 //
@@ -1800,17 +1802,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       boards: [],
+      board: {},
       showDeleted: false,
       showAdded: false,
+      showEditModal: false,
       title: '',
       date: '',
-      user: ''
+      user: '',
+      errors: new _models_Errors__WEBPACK_IMPORTED_MODULE_2__["default"]()
     };
   },
   mounted: function mounted() {
@@ -1836,8 +1859,22 @@ __webpack_require__.r(__webpack_exports__);
     formatDate: function formatDate(board) {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(board.created_at).format('MM/DD/YYYY');
     },
-    deleteBoard: function deleteBoard(id) {
+    editBoard: function editBoard(id) {
       var _this3 = this;
+
+      axios.get("/boards/".concat(id, "/edit"), {
+        params: {
+          id: "".concat(id)
+        }
+      }).then(function (response) {
+        _this3.board = response.data;
+      }).catch(function (error) {
+        _this3.$swal("Something is wrong! You can't edit this board");
+      });
+      this.showEditModal = true;
+    },
+    deleteBoard: function deleteBoard(id) {
+      var _this4 = this;
 
       axios.post("/boards/".concat(id), {
         params: {
@@ -1845,15 +1882,15 @@ __webpack_require__.r(__webpack_exports__);
         },
         _method: 'delete'
       }).then(function () {
-        var index = _this3.boards.findIndex(function (board) {
+        var index = _this4.boards.findIndex(function (board) {
           return board.id === id;
         });
 
-        _this3.boards.splice(index, 1);
+        _this4.boards.splice(index, 1);
 
-        _this3.showDeleted = true;
+        _this4.showDeleted = true;
       }).catch(function (error) {
-        _this3.$swal("Something is wrong! We're not able to delete the board.");
+        _this4.$swal("Something is wrong! We're not able to delete the board.");
       });
     }
   }
@@ -72033,6 +72070,112 @@ var render = function() {
     "div",
     [
       _c(
+        "bb-modal",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.showEditModal,
+              expression: "showEditModal"
+            }
+          ],
+          on: {
+            close: function($event) {
+              _vm.showEditModal = false
+            }
+          }
+        },
+        [
+          _c(
+            "h5",
+            {
+              staticClass: "modal-title",
+              attrs: { slot: "title" },
+              slot: "title"
+            },
+            [_vm._v("Edit board")]
+          ),
+          _vm._v(" "),
+          [
+            _c(
+              "form",
+              {
+                attrs: { method: "POST", action: "/boards" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.onUpdate()
+                  },
+                  keydown: function($event) {
+                    _vm.errors.clear($event.target.name)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "title" } }, [
+                    _vm._v("Board title")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.board.title,
+                        expression: "board.title"
+                      }
+                    ],
+                    ref: "title",
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "boardTitle",
+                      id: "title",
+                      name: "title",
+                      "aria-describedby": "titleHelp"
+                    },
+                    domProps: { value: _vm.board.title },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.board, "title", $event.target.value)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.has("title")
+                    ? _c("span", {
+                        staticClass: "help-field",
+                        domProps: {
+                          textContent: _vm._s(_vm.errors.get("title"))
+                        }
+                      })
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: {
+                      id: "create-board",
+                      type: "submit",
+                      disabled: _vm.errors.any()
+                    }
+                  },
+                  [_vm._v("Update")]
+                )
+              ]
+            )
+          ]
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c(
         "b-alert",
         {
           staticClass: "fade-el",
@@ -72099,7 +72242,12 @@ var render = function() {
                     "a",
                     {
                       staticClass: "btn btn-blue btn-sm",
-                      attrs: { href: "#" }
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.editBoard(board.id)
+                        }
+                      }
                     },
                     [_vm._v("Edit")]
                   ),
@@ -83639,7 +83787,8 @@ window.Event = new Vue();
 var app = new Vue({
   el: '#app',
   data: {
-    showModal: false
+    showModal: false,
+    showEditModal: false
   }
 });
 

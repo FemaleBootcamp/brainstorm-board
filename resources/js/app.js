@@ -10,7 +10,8 @@ const app = new Vue({
     el: '#app',
 
     data: {
-        showModal: false    
+        showModal: false,
+        showEditModal: false
     }
 
 });
