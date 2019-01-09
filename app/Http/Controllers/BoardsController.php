@@ -76,7 +76,8 @@ class BoardsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $board = Board::find($id);
+        return response()->json($board);
     }
 
     /**

@@ -9,7 +9,7 @@
         <bb-modal v-show="showModal" @close="showModal = false">
             <h5 class="modal-title" slot="title">Create your board</h5>
         </bb-modal>
-        <!-- Modal end -->
+        <!-- End Modal -->
     </div>
     <div class="row justify-content-center">
         <div class="col px-0 card table-responsive">
