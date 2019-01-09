@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Board;
-use App\User;
-use Response;
 use App\Http\Requests\StoreBoard;
+use Illuminate\Http\Request;
+use Response;
 
 class BoardsController extends Controller
 {
@@ -47,7 +46,8 @@ class BoardsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-     public function store(StoreBoard $request){
+    public function store(StoreBoard $request)
+    {
 
         $validated = $request->validated();
         $boards = new Board;
@@ -76,7 +76,7 @@ class BoardsController extends Controller
      */
     public function edit($id)
     {
-        $board = Board::find($id);
+        $board = Board::findOrFail($id);
         return response()->json($board);
     }
 
@@ -87,9 +87,14 @@ class BoardsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreBoard $request, $id)
     {
-        //
+
+        $validated = $request->validated();
+        $boards = Board::findOrFail($id);
+        $boards->update($request->all());
+        return response()->json($boards);
+
     }
 
     /**
@@ -104,12 +109,3 @@ class BoardsController extends Controller
         return response()->json(['status' => 'success'], 204);
     }
 }
-
-
-
-
-
-
-
-
-

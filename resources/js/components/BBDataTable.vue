@@ -4,24 +4,31 @@
         <bb-modal v-show="showEditModal" @close="showEditModal = false">
             <h5 class="modal-title" slot="title">Edit board</h5>
             <template>
-                <form method="POST" action="/boards" @submit.prevent="onUpdate()" @keydown="errors.clear($event.target.name)">
+                <form method="POST" action="/boards" @submit.prevent="onUpdate(board.id)" @keydown="errors.clear($event.target.name)">
                     <div class="form-group">
                         <label for="title">Board title</label>
                         <input ref="title" type="boardTitle" class="form-control" id="title" v-model="board.title" name="title"
                             aria-describedby="titleHelp">
                         <span class="help-field" v-if="errors.has('title')" v-text="errors.get('title')"></span>
                     </div>
-                    <button class="btn btn-secondary" id="create-board" type="submit" :disabled="errors.any()">Update</button>
+                    <button class="btn btn-blue" id="create-board" type="submit" :disabled="errors.any()">Update</button>
                 </form>
             </template>
         </bb-modal>
         <!-- Edit Modal End -->
+        <!-- Delete Alert -->
         <b-alert class="fade-el" variant="danger" dismissible :show="showDeleted" @dismissed="showDeleted=false">
             You have successfully deleted the record!
         </b-alert>
+        <!-- Added Alert -->
         <b-alert class="fade-el" variant="info" dismissible :show="showAdded" @dismissed="showAdded=false">
             You have successfully added the record!
         </b-alert>
+        <!-- Update Alert -->
+        <b-alert class="fade-el" variant="success" dismissible :show="showUpdated" @dismissed="showUpdated=false">
+            You have successfully updated the record!
+        </b-alert>
+        <!-- End Alerts -->
         <table id="dashboardTable" class="table table-bordered table-sm text-center" cellspacing="0" width="100%">
             <thead class="bg-lightgray">
                 <tr>
@@ -65,6 +72,7 @@
                 showDeleted: false,
                 showAdded: false,
                 showEditModal: false,
+                showUpdated: false,
                 title: '',
                 date: '',
                 user: '',
@@ -80,7 +88,9 @@
 
         created() {
             Event.$on('submit', () => Board.all(boards => this.boards = boards));
+            Event.$on('updated', () => Board.all(boards => this.boards = boards));
             Event.$on('submit', () => this.showAdded = true);
+            Event.$on('updated', () => this.showUpdated = true);
         },
 
         methods: {
@@ -114,6 +124,20 @@
                     this.$swal("Something is wrong! We're not able to delete the board.");
                 });
 
+            },
+            onUpdate(id) {
+                axios.post(`/boards/${id}`, {
+                    title: this.board.title,
+                    params: {
+                        id: `${id}`
+                    },
+                    _method: 'patch'
+                }).then(response => {
+                    this.showEditModal = false;
+                    Event.$emit('updated');
+                }).catch(error => {
+                    this.errors.record(error.response.data.errors);
+                });
             }
 
         }
