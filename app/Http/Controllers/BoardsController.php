@@ -54,11 +54,7 @@ class BoardsController extends Controller
         $boards->title = request('title');
         $boards->user_id = auth()->id();
         $boards->save();
-
-        if (request()->wantsJson()) {
-            return response($boards, 201);
-        }
-        return back();
+        return response()->json($boards);
     }
 
     /**

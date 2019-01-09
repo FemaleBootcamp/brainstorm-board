@@ -9529,8 +9529,27 @@ a.text-dark:focus {
 }
 
 .fade-el-wait {
-  -webkit-animation: fade-in-top 1s cubic-bezier(0.39, 0.575, 0.565, 1) 0.7s both;
-  animation: fade-in-top 1s cubic-bezier(0.39, 0.575, 0.565, 1) 0.7s both;
+  -webkit-animation: fade-in-top 1s cubic-bezier(0.39, 0.575, 0.565, 1) 0.3s both;
+  animation: fade-in-top 1s cubic-bezier(0.39, 0.575, 0.565, 1) 0.3s both;
+}
+
+.help-field {
+  color: #dc3545;
+  font-weight: 600;
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.swal2-popup .swal2-title {
+  font-size: 1em !important;
+}
+
+.swal2-popup .swal2-styled {
+  padding: 0.3em 1em !important;
+}
+
+.swal2-popup .swal2-styled .swal2-confirm {
+  border-radius: 15px !important;
 }
 
 @-webkit-keyframes fade-in-top {
@@ -9800,6 +9819,33 @@ a.text-dark:focus {
 
 #dashboard-page .is-active {
   display: block;
+}
+
+.modal-fade-enter,
+.modal-fade-leave-active {
+  opacity: 0;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.alert {
+  border: none;
+  color: white;
+}
+
+.alert-info {
+  background-color: #22d1b8;
+}
+
+.alert-danger {
+  background-color: #dc3545;
+}
+
+#create-board:hover {
+  background: #6c757d;
 }
 
 body {
