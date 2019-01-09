@@ -9844,6 +9844,10 @@ a.text-dark:focus {
   background-color: #dc3545;
 }
 
+.alert-success {
+  background-color: #4588ff;
+}
+
 #create-board:hover {
   background: #6c757d;
 }

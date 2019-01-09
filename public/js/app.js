@@ -1818,6 +1818,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1830,6 +1837,7 @@ __webpack_require__.r(__webpack_exports__);
       showDeleted: false,
       showAdded: false,
       showEditModal: false,
+      showUpdated: false,
       title: '',
       date: '',
       user: '',
@@ -1851,8 +1859,16 @@ __webpack_require__.r(__webpack_exports__);
         return _this2.boards = boards;
       });
     });
+    Event.$on('updated', function () {
+      return _models_Board__WEBPACK_IMPORTED_MODULE_1__["default"].all(function (boards) {
+        return _this2.boards = boards;
+      });
+    });
     Event.$on('submit', function () {
       return _this2.showAdded = true;
+    });
+    Event.$on('updated', function () {
+      return _this2.showUpdated = true;
     });
   },
   methods: {
@@ -1891,6 +1907,22 @@ __webpack_require__.r(__webpack_exports__);
         _this4.showDeleted = true;
       }).catch(function (error) {
         _this4.$swal("Something is wrong! We're not able to delete the board.");
+      });
+    },
+    onUpdate: function onUpdate(id) {
+      var _this5 = this;
+
+      axios.post("/boards/".concat(id), {
+        title: this.board.title,
+        params: {
+          id: "".concat(id)
+        },
+        _method: 'patch'
+      }).then(function (response) {
+        _this5.showEditModal = false;
+        Event.$emit('updated');
+      }).catch(function (error) {
+        _this5.errors.record(error.response.data.errors);
       });
     }
   }
@@ -72105,7 +72137,7 @@ var render = function() {
                 on: {
                   submit: function($event) {
                     $event.preventDefault()
-                    _vm.onUpdate()
+                    _vm.onUpdate(_vm.board.id)
                   },
                   keydown: function($event) {
                     _vm.errors.clear($event.target.name)
@@ -72159,7 +72191,7 @@ var render = function() {
                 _c(
                   "button",
                   {
-                    staticClass: "btn btn-secondary",
+                    staticClass: "btn btn-blue",
                     attrs: {
                       id: "create-board",
                       type: "submit",
@@ -72201,6 +72233,20 @@ var render = function() {
           }
         },
         [_vm._v("\n        You have successfully added the record!\n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-alert",
+        {
+          staticClass: "fade-el",
+          attrs: { variant: "success", dismissible: "", show: _vm.showUpdated },
+          on: {
+            dismissed: function($event) {
+              _vm.showUpdated = false
+            }
+          }
+        },
+        [_vm._v("\n        You have successfully updated the record!\n    ")]
       ),
       _vm._v(" "),
       _c(

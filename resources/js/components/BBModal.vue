@@ -57,7 +57,6 @@
             onSuccess(response) {
                 this.close();
                 Event.$emit('submit');
-
                 this.title = '';
             }
         }
