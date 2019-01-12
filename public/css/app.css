@@ -9804,7 +9804,18 @@ a.text-dark:focus {
 }
 
 #dashboard-page .card {
-  border: 2px solid rgba(0, 0, 0, 0.125);
+  border: none !important;
+  border-radius: 0px;
+}
+
+@media (min-width: 765px) {
+  #dashboard-page .card {
+    overflow-x: hidden !important;
+  }
+}
+
+#dashboard-page select:focus {
+  box-shadow: none;
 }
 
 #dashboard-page #dashboardTable th,
@@ -9850,6 +9861,20 @@ a.text-dark:focus {
 
 #create-board:hover {
   background: #6c757d;
+}
+
+.pagination {
+  justify-content: flex-end;
+  padding-right: 3%;
+}
+
+.pagination .page-item.active .page-link {
+  background: #ff4d96;
+  border-color: #ff4d96;
+}
+
+.pagination .page-link {
+  color: #ff4d96;
 }
 
 body {

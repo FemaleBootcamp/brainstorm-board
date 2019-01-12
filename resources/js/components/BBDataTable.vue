@@ -29,7 +29,19 @@
             You have successfully updated the record!
         </b-alert>
         <!-- End Alerts -->
-        <table id="dashboardTable" class="table table-bordered table-sm text-center" cellspacing="0" width="100%">
+        <!-- Filter -->
+        <div class="form-group">
+            <label for="filterByDate" class="pl-2">Filter Boards</label>
+            <div class="row">
+                <select class="form-control col-md-3 ml-3" id="filterByDate" v-model="selected" @change="onChange(selected)">
+                    <option v-for="param in filterParams" v-bind:value="param.value" :key="param.value">
+                        {{ param.text }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- Table Start -->
+        <table border="2" id="dashboardTable" class="table table-bordered table-sm text-center" cellspacing="0" width="100%">
             <thead class="bg-lightgray">
                 <tr>
                     <th class="th-sm">Title</th>
@@ -39,7 +51,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="board in boards" :key="board.id">
+                <tr v-for="board in boards.data" :key="board.id">
                     <td :title="title">{{ board.title }}</td>
                     <td :date="date">{{ formatDate(board.created_at) }}</td>
                     <td :user="user">{{ board.user.name }}</td>
@@ -53,6 +65,8 @@
             <tfoot>
             </tfoot>
         </table>
+        <!-- Pagination -->
+        <pagination :data="boards" :limit="5" @pagination-change-page="getResults"></pagination>
     </div>
 </template>
 <script>
@@ -67,7 +81,7 @@
 
             return {
 
-                boards: [],
+                boards: {},
                 board: {},
                 showDeleted: false,
                 showAdded: false,
@@ -76,27 +90,59 @@
                 title: '',
                 date: '',
                 user: '',
-                errors: new Errors()
-
+                errors: new Errors(),
+                selected: 'all',
+                filterParams: [{
+                        text: 'All',
+                        value: 'all'
+                    },
+                    {
+                        text: 'Today',
+                        value: 'day'
+                    },
+                    {
+                        text: 'This week',
+                        value: 'week'
+                    },
+                    {
+                        text: 'This month',
+                        value: 'month'
+                    }
+                ]
             }
 
         },
-
         mounted() {
-            Board.all(boards => this.boards = boards);
+            this.getBoards();
         },
 
         created() {
-            Event.$on('submit', () => Board.all(boards => this.boards = boards));
-            Event.$on('updated', () => Board.all(boards => this.boards = boards));
+            this.getResults();
+            Event.$on('submit', () => this.getBoards());
+            Event.$on('updated', () => this.getBoards());
             Event.$on('submit', () => this.showAdded = true);
             Event.$on('updated', () => this.showUpdated = true);
         },
 
         methods: {
 
+            getBoards() {
+                Board.all(boards => this.boards = boards);
+            },
+            onChange(param) {
+                axios.get(`/boards?param=` + param)
+                    .then(response => {
+                        this.boards = response.data;
+                    });
+            },
+            getResults(page = 1) {
+                axios.get('/boards?page=' + page)
+                    .then(response => {
+                        this.boards = response.data;
+                    });
+            },
             formatDate(board) {
-                return moment(board.created_at).format('MM/DD/YYYY');
+                return moment(board).format('DD/MM/YYYY');
             },
             editBoard(id) {
                 axios.get(`/boards/${id}/edit`, {
@@ -117,8 +163,8 @@
                     },
                     _method: 'delete'
                 }).then(() => {
-                    let index = this.boards.findIndex(board => board.id === id);
-                    this.boards.splice(index, 1);
+                    let index = this.boards.data.findIndex(board => board.id === id);
+                    this.boards.data.splice(index, 1);
                     this.showDeleted = true;
                 }).catch(error => {
                     this.$swal("Something is wrong! We're not able to delete the board.");
