@@ -315,7 +315,16 @@
 #dashboard-page {
 
     .card {
-        border: 2px solid rgba(0, 0, 0, 0.125);
+        border: none !important;
+        border-radius: 0px;
+
+        @media(min-width: 765px) {
+            overflow-x: hidden !important;
+        }
+    }
+
+    select:focus {
+        box-shadow: none;
     }
 
     #dashboardTable {
@@ -324,6 +333,7 @@
         tr {
             padding: 15px;
         }
+
     }
 
     .table-sm th,
@@ -344,7 +354,7 @@
 
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-    transition: opacity .5s ease
+    transition: opacity .5s ease;
 }
 
 .alert {
@@ -360,12 +370,26 @@
     background-color: #dc3545;
 }
 
-.alert-success{
+.alert-success {
     background-color: $blue;
 }
 
 #create-board:hover {
     background: #6c757d;
+}
+
+.pagination {
+    justify-content: flex-end;
+    padding-right: 3%;
+
+    .page-item.active .page-link {
+        background: $magenta;
+        border-color: $magenta;
+    }
+
+    .page-link {
+        color: $magenta;
+    }
 }
 
 // *************

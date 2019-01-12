@@ -23,7 +23,7 @@
         "vue": "^2.5.17",
         "bootstrap-vue": "^2.0.0-rc.11",
         "moment": "^2.23.0",
-        "vue-sweetalert2": "^1.6.3"
-        
+        "vue-sweetalert2": "^1.6.3",
+        "laravel-vue-pagination": "^2.2.0"
     }
 }

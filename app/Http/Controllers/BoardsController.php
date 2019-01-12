@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Board;
 use App\Http\Requests\StoreBoard;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Response;
 
@@ -26,8 +27,13 @@ class BoardsController extends Controller
      */
     public function index(Request $request)
     {
-        $boards = Board::with('user')->get();
+        $boards = new Board;
+        if ($request->exists('param')) {
+            $boards = $this->filter($boards, $request->param);
+        }
+        $boards = $boards->with('user')->orderBy('created_at', 'id')->paginate(20)->appends(request('page'));
         return response()->json($boards);
+
     }
 
     /**
@@ -38,6 +44,24 @@ class BoardsController extends Controller
     public function create()
     {
         //
+    }
+
+    public function filter($boards, $param)
+    {
+
+        if ($param === "all") {
+            return $boards;
+        }
+        if ($param === "day") {
+            return $boards->whereDay('created_at', Carbon::now());
+        }
+        if ($param === "week") {
+            return $boards->whereDate('created_at', '>', Carbon::now()->subWeek());
+        }
+        if ($param === "month") {
+            return $boards->whereDate('created_at', '>', Carbon::now()->subMonth());
+        }
+
     }
 
     /**
