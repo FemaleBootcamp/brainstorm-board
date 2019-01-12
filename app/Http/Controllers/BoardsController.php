@@ -27,13 +27,12 @@ class BoardsController extends Controller
      */
     public function index(Request $request)
     {
-        $boards = new Board;
-        if ($request->exists('param')) {
-            $boards = $this->filter($boards, $request->param);
-        }
-        $boards = $boards->with('user')->orderBy('created_at', 'id')->paginate(20)->appends(request('page'));
+        $param = $request->param;
+        $q = Board::all();
+        $boards = Board::when($param, function ($q, $param){
+           return $this->filter($q, $param);
+        })->with('user')->orderBy('created_at', 'id')->paginate(20)->appends(request('page'));
         return response()->json($boards);
-
     }
 
     /**
@@ -48,7 +47,6 @@ class BoardsController extends Controller
 
     public function filter($boards, $param)
     {
-
         if ($param === "all") {
             return $boards;
         }
