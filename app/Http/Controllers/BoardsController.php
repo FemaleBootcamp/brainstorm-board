@@ -29,8 +29,8 @@ class BoardsController extends Controller
     {
         $param = $request->param;
         $q = Board::all();
-        $boards = Board::when($param, function ($q, $param){
-           return $this->filter($q, $param);
+        $boards = Board::when($param, function ($q, $param) {
+            return $this->filter($q, $param);
         })->with('user')->orderBy('created_at', 'id')->paginate(20)->appends(request('page'));
         return response()->json($boards);
     }
