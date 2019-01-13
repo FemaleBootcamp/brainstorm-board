@@ -87,7 +87,8 @@ class BoardsController extends Controller
      */
     public function show($id)
     {
-        //
+        $board = Board::findOrFail($id);
+        return response()->json($board);
     }
 
     /**

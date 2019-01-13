@@ -347,6 +347,18 @@
 
 }
 
+.modal-content{
+    border-radius: $border-radius;
+    .modal-header{
+        background: #f9f9f9;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+    .modal-footer{
+        border-radius: 0px 0px 15px 15px;
+    }
+}
+
 .modal-fade-enter,
 .modal-fade-leave-active {
     opacity: 0;
