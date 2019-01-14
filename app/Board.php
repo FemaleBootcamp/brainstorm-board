@@ -15,7 +15,7 @@ class Board extends Model
         return $this->belongsTo(User::class)->select(['id', 'name']);
     }
 
-    public function idea()
+    public function ideas()
     {
         return $this->hasMany(Idea::class);
     }

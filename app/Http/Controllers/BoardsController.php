@@ -88,8 +88,7 @@ class BoardsController extends Controller
     public function show($id)
     {
         $board = Board::findOrFail($id);
-        $ideas = $board->idea;
-        return view('idea', ['board'=>$board,'ideas'=>$ideas]);
+        return view('idea', ['board'=>$board]);
     }
 
     /**
@@ -114,7 +113,7 @@ class BoardsController extends Controller
     public function update(StoreBoard $request, $id)
     {
 
-        $validated = $request->validated();
+        $request->validated();
         $boards = Board::findOrFail($id);
         $boards->update($request->all());
         return response()->json($boards);
