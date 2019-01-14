@@ -416,9 +416,18 @@
 
 #board-page {
 
-    textarea {
-        background: transparent;
-        border: none;
+    .sticky-notes{
+        textarea {
+            background: transparent;
+            border: none;
+            &:focus{
+                outline: none;
+            }
+        }
+
+        &:focus-within{
+            @include on-focus-shadow;
+        }
     }
 
     .idea-btn {

@@ -88,7 +88,8 @@ class BoardsController extends Controller
     public function show($id)
     {
         $board = Board::findOrFail($id);
-        return view('idea', compact('board'));
+        $ideas = $board->idea;
+        return view('idea', ['board'=>$board,'ideas'=>$ideas]);
     }
 
     /**
