@@ -347,14 +347,16 @@
 
 }
 
-.modal-content{
+.modal-content {
     border-radius: $border-radius;
-    .modal-header{
+
+    .modal-header {
         background: #f9f9f9;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
     }
-    .modal-footer{
+
+    .modal-footer {
         border-radius: 0px 0px 15px 15px;
     }
 }
@@ -406,4 +408,26 @@
 
 // *************
 // Dashboard Page End
+// **************
+
+// *************
+// Board Page Start
+// **************
+
+#board-page {
+
+    textarea {
+        background: transparent;
+        border: none;
+    }
+
+    .idea-btn {
+        -webkit-animation: wobble 0.8s 1.5s 2 both;
+        animation: wobble 0.8s 1.5s 2 both;
+    }
+
+}
+
+// *************
+// Board Page End
 // **************

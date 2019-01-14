@@ -9891,6 +9891,16 @@ a.text-dark:focus {
   color: #ff4d96;
 }
 
+#board-page textarea {
+  background: transparent;
+  border: none;
+}
+
+#board-page .idea-btn {
+  -webkit-animation: wobble 0.8s 1.5s 2 both;
+  animation: wobble 0.8s 1.5s 2 both;
+}
+
 body {
   font-family: "Lato", sans-serif;
   color: #333;
@@ -9905,7 +9915,7 @@ body {
 }
 
 .bg-secondary {
-  background: #22d1b8;
+  background: #22d1b8 !important;
 }
 
 .bg-blue {

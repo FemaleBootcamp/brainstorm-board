@@ -67,7 +67,7 @@
                     <td :date="date">{{ formatDate(board.created_at) }}</td>
                     <td :user="user">{{ board.user.name }}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-sm">View</a>
+                        <a href="#" class="btn btn-primary btn-sm" @click="viewBoard(board.id)">View</a>
                         <a href="#" class="btn btn-blue btn-sm" @click="editBoard(board.id)">Edit</a>
                         <button type="submit" class="btn btn-danger btn-sm" @click="confirmDelete(board.id)">Delete</button>
                     </td>
@@ -155,6 +155,18 @@
             formatDate(board) {
                 return moment(board).format('DD/MM/YYYY');
             },
+            viewBoard(id){
+                axios.get(window.location.href = `/boards/${id}`, {
+                    params: {
+                        id: `${id}`
+                    }
+                }).then(response => {
+                    this.board = response.data;
+                }).catch(error => {
+                    console.log(error);
+                    this.$swal("Something is wrong! You can't view this board");
+                });
+            },
             editBoard(id) {
                 axios.get(`/boards/${id}/edit`, {
                     params: {
@@ -168,7 +180,7 @@
                 this.showEditModal = true;
             },
             confirmDelete(id) {
-                axios.get(`/boards/${id}`, {
+                axios.get(`/boards/${id}/edit`, {
                     params: {
                         id: `${id}`
                     }

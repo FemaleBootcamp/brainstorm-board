@@ -1929,36 +1929,51 @@ __webpack_require__.r(__webpack_exports__);
     formatDate: function formatDate(board) {
       return moment__WEBPACK_IMPORTED_MODULE_0___default()(board).format('DD/MM/YYYY');
     },
-    editBoard: function editBoard(id) {
+    viewBoard: function viewBoard(id) {
       var _this5 = this;
 
-      axios.get("/boards/".concat(id, "/edit"), {
+      axios.get(window.location.href = "/boards/".concat(id), {
         params: {
           id: "".concat(id)
         }
       }).then(function (response) {
         _this5.board = response.data;
       }).catch(function (error) {
-        _this5.$swal("Something is wrong! You can't edit this board");
+        console.log(error);
+
+        _this5.$swal("Something is wrong! You can't view this board");
       });
-      this.showEditModal = true;
     },
-    confirmDelete: function confirmDelete(id) {
+    editBoard: function editBoard(id) {
       var _this6 = this;
 
-      axios.get("/boards/".concat(id), {
+      axios.get("/boards/".concat(id, "/edit"), {
         params: {
           id: "".concat(id)
         }
       }).then(function (response) {
         _this6.board = response.data;
       }).catch(function (error) {
-        _this6.$swal("Something is wrong! You can't delete this board");
+        _this6.$swal("Something is wrong! You can't edit this board");
+      });
+      this.showEditModal = true;
+    },
+    confirmDelete: function confirmDelete(id) {
+      var _this7 = this;
+
+      axios.get("/boards/".concat(id, "/edit"), {
+        params: {
+          id: "".concat(id)
+        }
+      }).then(function (response) {
+        _this7.board = response.data;
+      }).catch(function (error) {
+        _this7.$swal("Something is wrong! You can't delete this board");
       });
       this.showDeleteModal = true;
     },
     deleteBoard: function deleteBoard(id) {
-      var _this7 = this;
+      var _this8 = this;
 
       axios.post("/boards/".concat(id), {
         params: {
@@ -1966,21 +1981,21 @@ __webpack_require__.r(__webpack_exports__);
         },
         _method: 'delete'
       }).then(function (response) {
-        _this7.showDeleteModal = false;
+        _this8.showDeleteModal = false;
 
-        var index = _this7.boards.data.findIndex(function (board) {
+        var index = _this8.boards.data.findIndex(function (board) {
           return board.id === id;
         });
 
-        _this7.boards.data.splice(index, 1);
+        _this8.boards.data.splice(index, 1);
 
-        _this7.showDeleted = true;
+        _this8.showDeleted = true;
       }).catch(function (error) {
-        _this7.$swal("Something is wrong! We're not able to delete the board.");
+        _this8.$swal("Something is wrong! We're not able to delete the board.");
       });
     },
     onUpdate: function onUpdate(id) {
-      var _this8 = this;
+      var _this9 = this;
 
       axios.post("/boards/".concat(id), {
         title: this.board.title,
@@ -1989,10 +2004,10 @@ __webpack_require__.r(__webpack_exports__);
         },
         _method: 'patch'
       }).then(function (response) {
-        _this8.showEditModal = false;
+        _this9.showEditModal = false;
         Event.$emit('updated');
       }).catch(function (error) {
-        _this8.errors.record(error.response.data.errors);
+        _this9.errors.record(error.response.data.errors);
       });
     }
   }
@@ -73799,7 +73814,12 @@ var render = function() {
                     "a",
                     {
                       staticClass: "btn btn-primary btn-sm",
-                      attrs: { href: "#" }
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.viewBoard(board.id)
+                        }
+                      }
                     },
                     [_vm._v("View")]
                   ),
