@@ -16,6 +16,17 @@
             </template>
         </bb-modal>
         <!-- Edit Modal End -->
+        <!-- Delete Modal Start -->
+        <bb-modal v-show="showDeleteModal" @close="showDeleteModal = false">
+            <h5 class="modal-title" slot="title">Delete board</h5>
+            <template>
+                <p class="mb-0"><b>Are you sure you want to delete he the board {{ board.title }}?</b></p>
+                <p>This action is permanent and it cannot be undone.</p>
+                <button type="submit" class="btn btn-danger" @click.prevent="deleteBoard(board.id)">Delete</button>
+                <button type="submit" class="btn btn-gray" @click="showDeleteModal = false">Cancel</button>
+            </template>
+        </bb-modal>
+        <!-- Delete Modal ENd -->
         <!-- Delete Alert -->
         <b-alert class="fade-el" variant="danger" dismissible :show="showDeleted" @dismissed="showDeleted=false">
             You have successfully deleted the record!
@@ -56,9 +67,9 @@
                     <td :date="date">{{ formatDate(board.created_at) }}</td>
                     <td :user="user">{{ board.user.name }}</td>
                     <td>
-                        <a href="#" class="btn btn-primary btn-sm">View</a>
+                        <a href="#" class="btn btn-primary btn-sm" @click="viewBoard(board.id)">View</a>
                         <a href="#" class="btn btn-blue btn-sm" @click="editBoard(board.id)">Edit</a>
-                        <button type="submit" class="btn btn-danger btn-sm" @click.prevent="deleteBoard(board.id)">Delete</button>
+                        <button type="submit" class="btn btn-danger btn-sm" @click="confirmDelete(board.id)">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -66,7 +77,7 @@
             </tfoot>
         </table>
         <!-- Pagination -->
-        <pagination :data="boards" :limit="5" @pagination-change-page="getResults"></pagination>
+        <pagination :data="boards" :limit="5" @pagination-change-page="filterData"></pagination>
     </div>
 </template>
 <script>
@@ -86,6 +97,7 @@
                 showDeleted: false,
                 showAdded: false,
                 showEditModal: false,
+                showDeleteModal: false,
                 showUpdated: false,
                 title: '',
                 date: '',
@@ -117,7 +129,6 @@
         },
 
         created() {
-            this.getResults();
             Event.$on('submit', () => this.getBoards());
             Event.$on('updated', () => this.getBoards());
             Event.$on('submit', () => this.showAdded = true);
@@ -135,7 +146,7 @@
                         this.boards = response.data;
                     });
             },
-            getResults(page = 1) {
+            filterData(page = 1) {
                 axios.get('/boards?page=' + page)
                     .then(response => {
                         this.boards = response.data;
@@ -143,6 +154,18 @@
             },
             formatDate(board) {
                 return moment(board).format('DD/MM/YYYY');
+            },
+            viewBoard(id){
+                axios.get(window.location.href = `/boards/${id}`, {
+                    params: {
+                        id: `${id}`
+                    }
+                }).then(response => {
+                    this.board = response.data;
+                }).catch(error => {
+                    console.log(error);
+                    this.$swal("Something is wrong! You can't view this board");
+                });
             },
             editBoard(id) {
                 axios.get(`/boards/${id}/edit`, {
@@ -156,13 +179,26 @@
                 });
                 this.showEditModal = true;
             },
+            confirmDelete(id) {
+                axios.get(`/boards/${id}/edit`, {
+                    params: {
+                        id: `${id}`
+                    }
+                }).then(response => {
+                    this.board = response.data;
+                }).catch(error => {
+                    this.$swal("Something is wrong! You can't delete this board");
+                });
+                this.showDeleteModal = true;
+            },
             deleteBoard(id) {
                 axios.post(`/boards/${id}`, {
                     params: {
                         id: `${id}`
                     },
                     _method: 'delete'
-                }).then(() => {
+                }).then((response) => {
+                    this.showDeleteModal = false;
                     let index = this.boards.data.findIndex(board => board.id === id);
                     this.boards.data.splice(index, 1);
                     this.showDeleted = true;

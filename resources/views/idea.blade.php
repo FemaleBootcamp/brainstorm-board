@@ -3,7 +3,7 @@
 @section('content')
 <div class="container" id="board-page">
     <div class="row d-flex justify-content-center mb-3">
-        <h2 class="p-3 rounded bg-primary white"><i class="far fa-lightbulb"></i> Idea Board</h2><br>
+        <h2 class="p-3 rounded bg-primary white"><i class="far fa-lightbulb"></i> {{ $board->title }} Board</h2><br>
     </div>
     <div class="row justify-content-center mb-3">
         <a href="#" class="button-outline green-border idea-btn">New Idea</a>
