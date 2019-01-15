@@ -41,7 +41,6 @@ class IdeasController extends Controller
      */
     public function store(StoreIdea $request)
     {
-        $request->validated();
         $ideas = new Idea;
         $ideas->title = request('title');
         $ideas->description = request('description');

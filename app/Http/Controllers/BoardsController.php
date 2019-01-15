@@ -112,12 +112,9 @@ class BoardsController extends Controller
      */
     public function update(StoreBoard $request, $id)
     {
-
-        $request->validated();
         $boards = Board::findOrFail($id);
         $boards->update($request->all());
         return response()->json($boards);
-
     }
 
     /**
