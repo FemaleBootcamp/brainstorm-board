@@ -9891,9 +9891,18 @@ a.text-dark:focus {
   color: #ff4d96;
 }
 
-#board-page textarea {
+#board-page .sticky-notes textarea {
   background: transparent;
   border: none;
+}
+
+#board-page .sticky-notes textarea:focus {
+  outline: none;
+}
+
+#board-page .sticky-notes:focus-within {
+  transition: all 0.2s ease-in;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 #board-page .idea-btn {

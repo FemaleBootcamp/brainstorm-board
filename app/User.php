@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Board;
+use App\Idea;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -31,5 +32,10 @@ class User extends Authenticatable
     public function boards()
     {
         return $this->hasMany(Board::class);
+    }
+
+    public function ideas()
+    {
+        return $this->hasMany(Idea::class);
     }
 }
