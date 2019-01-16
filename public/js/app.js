@@ -2041,28 +2041,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["idea", "boardId", "unique"],
+  props: ["idea", "boardId", "unique", "ideaTitle", "ideaDescription"],
   data: function data() {
     return {
-      title: '',
-      description: '',
+      title: this.ideaTitle,
+      description: this.ideaDescription,
       board_id: this.boardId,
       id: this.unique
     };
   },
   methods: {
     addIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
+      var _this = this;
+
       axios.post('/boards/' + this.board_id + '/ideas', this.$data).then(function (response) {
-        Event.$emit('update', response.data);
+        _this.id = response.data.id;
       });
-    }, 300),
+    }, 2000),
     updateIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
-      if (this.title.length && this.description.length !== 0) {
-        if (id) {
-          axios.patch('/boards/' + this.idea.board_id + '/ideas/' + id, this.$data).then(function (response) {
-            console.log(response.data.id);
-          });
-        } else {
+      if (this.title && this.description && this.title.length && this.description.length !== 0) {
+        if (this.id) {
+          id = this.id;
+          axios.patch('/boards/' + this.board_id + '/ideas/' + id, this.$data);
+        } else if (!this.id) {
           this.addIdea();
         }
       }
@@ -2094,6 +2095,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['board', 'board-ideas'],
@@ -2103,19 +2105,9 @@ __webpack_require__.r(__webpack_exports__);
       idea: {}
     };
   },
-  mounted: function mounted() {
-    var _this = this;
-
-    Event.$on('update', function () {
-      return _this.updateBoard();
-    });
-  },
   methods: {
     createIdea: function createIdea() {
       this.ideas.unshift(this.idea);
-    },
-    updateBoard: function updateBoard(val) {
-      console.log(val); // this.ideas[0] = val;
     }
   }
 });
@@ -74134,7 +74126,13 @@ var render = function() {
           { key: idea.id },
           [
             _c("bb-idea", {
-              attrs: { idea: idea, unique: idea.id, boardId: _vm.board.id }
+              attrs: {
+                idea: idea,
+                unique: idea.id,
+                ideaTitle: idea.title,
+                ideaDescription: idea.description,
+                boardId: _vm.board.id
+              }
             })
           ],
           1

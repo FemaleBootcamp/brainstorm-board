@@ -16,12 +16,12 @@
 
     export default {
 
-        props: ["idea", "boardId", "unique"],
+        props: ["idea", "boardId", "unique", "ideaTitle", "ideaDescription"],
 
         data() {
             return {
-                title: '',
-                description: '',
+                title: this.ideaTitle,
+                description: this.ideaDescription,
                 board_id: this.boardId,
                 id: this.unique
             }
@@ -31,17 +31,15 @@
             addIdea: _.debounce(function () {
                 axios.post('/boards/' + this.board_id + '/ideas', this.$data)
                     .then((response) => {
-                        Event.$emit('update', response.data);
+                        this.id = response.data.id;
                     });
-            }, 300),
+            }, 2000),
             updateIdea: _.debounce(function (id) {
-                if (this.title.length && this.description.length !== 0) {
-                    if (id) {
-                        axios.patch('/boards/' + this.idea.board_id + '/ideas/' + id, this.$data)
-                            .then((response) => {
-                                console.log(response.data.id);
-                            });
-                    } else {
+                if ((this.title && this.description) && (this.title.length && this.description.length !== 0)) {
+                    if (this.id) {
+                        id = this.id;
+                        axios.patch('/boards/' + this.board_id + '/ideas/' + id, this.$data);
+                    } else if (!this.id) {
                         this.addIdea();
                     }
                 }
@@ -49,4 +47,5 @@
         }
 
     };
+
 </script>
