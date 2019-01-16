@@ -9,4 +9,4 @@ Route::get('/index', 'HomeController@index');
 Auth::routes();
 
 Route::resource('boards', 'BoardsController');
-Route::resource('boards/{board}/ideas', 'IdeasController');
+Route::resource('boards/{id}/ideas', 'IdeasController');

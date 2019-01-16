@@ -416,22 +416,6 @@
 
 #board-page {
 
-    .btn-title{
-        transition: all 0.2s ease-in;
-        cursor: pointer;
-        color: white;
-        text-decoration: none;
-        h4{
-            &:hover span{
-                display: none;
-            }
-            &:hover:before,
-            &:hover:active{
-                content: 'Back to boards ';
-            }
-        }
-    }
-
     .sticky-notes{
         textarea {
             background: transparent;

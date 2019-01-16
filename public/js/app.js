@@ -2041,30 +2041,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["idea", "boardId", "unique"],
+  props: ["idea"],
   data: function data() {
     return {
       title: '',
-      description: '',
-      board_id: this.boardId,
-      id: this.unique
+      description: ''
     };
   },
   methods: {
-    addIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
-      axios.post('/boards/' + this.board_id + '/ideas', this.$data).then(function (response) {
-        Event.$emit('update', response.data);
-      });
-    }, 300),
-    updateIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
+    addIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
       if (this.title.length && this.description.length !== 0) {
-        if (id) {
-          axios.patch('/boards/' + this.idea.board_id + '/ideas/' + id, this.$data).then(function (response) {
-            console.log(response.data.id);
-          });
-        } else {
-          this.addIdea();
-        }
+        axios.post('/boards/' + this.idea.board_id + '/ideas', this.$data);
       }
     }, 2000)
   }
@@ -2100,22 +2087,14 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       ideas: this.boardIdeas,
-      idea: {}
+      idea: {
+        'board_id': this.board.id
+      }
     };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    Event.$on('update', function () {
-      return _this.updateBoard();
-    });
   },
   methods: {
     createIdea: function createIdea() {
       this.ideas.unshift(this.idea);
-    },
-    updateBoard: function updateBoard(val) {
-      console.log(val); // this.ideas[0] = val;
     }
   }
 });
@@ -74023,7 +74002,7 @@ var render = function() {
         on: {
           keyup: function($event) {
             $event.preventDefault()
-            _vm.updateIdea(_vm.idea.id)
+            _vm.addIdea(_vm.idea.id)
           }
         }
       },
@@ -74132,11 +74111,7 @@ var render = function() {
         return _c(
           "div",
           { key: idea.id },
-          [
-            _c("bb-idea", {
-              attrs: { idea: idea, unique: idea.id, boardId: _vm.board.id }
-            })
-          ],
+          [_c("bb-idea", { attrs: { idea: idea, boardId: _vm.board.id } })],
           1
         )
       }),
