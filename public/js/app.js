@@ -2041,17 +2041,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["idea"],
+  props: ["idea", "boardId", "unique", "ideaTitle", "ideaDescription"],
   data: function data() {
     return {
-      title: '',
-      description: ''
+      title: this.ideaTitle,
+      description: this.ideaDescription,
+      board_id: this.boardId,
+      id: this.unique
     };
   },
   methods: {
-    addIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
-      if (this.title.length && this.description.length !== 0) {
-        axios.post('/boards/' + this.idea.board_id + '/ideas', this.$data);
+    addIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function () {
+      var _this = this;
+
+      axios.post('/boards/' + this.board_id + '/ideas', this.$data).then(function (response) {
+        _this.id = response.data.id;
+      });
+    }, 2000),
+    updateIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
+      if (this.title && this.description && this.title.length && this.description.length !== 0) {
+        if (this.id) {
+          id = this.id;
+          axios.patch('/boards/' + this.board_id + '/ideas/' + id, this.$data);
+        } else if (!this.id) {
+          this.addIdea();
+        }
       }
     }, 2000)
   }
@@ -2081,15 +2095,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['board', 'board-ideas'],
   data: function data() {
     return {
       ideas: this.boardIdeas,
-      idea: {
-        'board_id': this.board.id
-      }
+      idea: {}
     };
   },
   methods: {
@@ -74002,7 +74015,7 @@ var render = function() {
         on: {
           keyup: function($event) {
             $event.preventDefault()
-            _vm.addIdea(_vm.idea.id)
+            _vm.updateIdea(_vm.idea.id)
           }
         }
       },
@@ -74111,7 +74124,17 @@ var render = function() {
         return _c(
           "div",
           { key: idea.id },
-          [_c("bb-idea", { attrs: { idea: idea, boardId: _vm.board.id } })],
+          [
+            _c("bb-idea", {
+              attrs: {
+                idea: idea,
+                unique: idea.id,
+                ideaTitle: idea.title,
+                ideaDescription: idea.description,
+                boardId: _vm.board.id
+              }
+            })
+          ],
           1
         )
       }),

@@ -1,6 +1,6 @@
 <template>
     <div class="card sticky-notes mb-5">
-        <form method="POST" action="/ideas" @keyup.prevent="addIdea(idea.id)">
+        <form method="POST" action="/ideas" @keyup.prevent="updateIdea(idea.id)">
             <div class="card-header bg-primary">
                 <textarea name="title" cols="30" rows="1" class="bold white" v-model="title" v-text="idea.title"></textarea>
             </div>
@@ -16,19 +16,32 @@
 
     export default {
 
-        props: ["idea"],
+        props: ["idea", "boardId", "unique", "ideaTitle", "ideaDescription"],
 
         data() {
             return {
-                title: '',
-                description: ''
+                title: this.ideaTitle,
+                description: this.ideaDescription,
+                board_id: this.boardId,
+                id: this.unique
             }
         },
 
         methods: {
-            addIdea: _.debounce(function (id) {
-                if (this.title.length && this.description.length !== 0) {
-                    axios.post('/boards/' + this.idea.board_id + '/ideas', this.$data);
+            addIdea: _.debounce(function () {
+                axios.post('/boards/' + this.board_id + '/ideas', this.$data)
+                    .then((response) => {
+                        this.id = response.data.id;
+                    });
+            }, 2000),
+            updateIdea: _.debounce(function (id) {
+                if ((this.title && this.description) && (this.title.length && this.description.length !== 0)) {
+                    if (this.id) {
+                        id = this.id;
+                        axios.patch('/boards/' + this.board_id + '/ideas/' + id, this.$data);
+                    } else if (!this.id) {
+                        this.addIdea();
+                    }
                 }
             }, 2000)
         }

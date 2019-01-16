@@ -18,9 +18,9 @@ class IdeasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
- 
+
     }
 
     /**
@@ -45,7 +45,7 @@ class IdeasController extends Controller
         $ideas->title = request('title');
         $ideas->description = request('description');
         $ideas->user_id = auth()->id();
-        $ideas->board_id = request('id');
+        $ideas->board_id = request('board');
         $ideas->save();
         return response()->json($ideas);
     }
@@ -69,7 +69,7 @@ class IdeasController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -79,9 +79,11 @@ class IdeasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreIdea $request, $id)
     {
-        //
+        $ideas = Idea::find($request->id);
+        $ideas->update($request->all());
+        return response()->json($ideas);
     }
 
     /**

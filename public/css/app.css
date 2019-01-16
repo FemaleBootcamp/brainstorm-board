@@ -9891,6 +9891,22 @@ a.text-dark:focus {
   color: #ff4d96;
 }
 
+#board-page .btn-title {
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+}
+
+#board-page .btn-title h4:hover span {
+  display: none;
+}
+
+#board-page .btn-title h4:hover:before,
+#board-page .btn-title h4:hover:active {
+  content: "Back to boards ";
+}
+
 #board-page .sticky-notes textarea {
   background: transparent;
   border: none;
@@ -10010,6 +10026,6 @@ body {
 }
 
 .blue-border:hover {
-  backgound: #4588ff;
+  background: #4588ff;
 }
 
