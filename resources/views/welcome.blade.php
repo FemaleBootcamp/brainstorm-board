@@ -63,7 +63,7 @@
             <!-- Footer -->
             <footer class="row text-center pt-md-5 mt-5">
                 <div class="col pt-3 pb-1 bg-gray">
-                    <p>Brainstorm Boards 2018 &copy; All right reserved.</p>
+                    <p>Brainstorm Board 2018 &copy; All right reserved.</p>
                 </div>
             </footer>
         </div>

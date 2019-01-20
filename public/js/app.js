@@ -1861,8 +1861,8 @@ __webpack_require__.r(__webpack_exports__);
       board: {},
       showDeleted: false,
       showAdded: false,
-      showEditModal: false,
-      showDeleteModal: false,
+      editBoardModal: false,
+      deleteBoardModal: false,
       showUpdated: false,
       title: '',
       date: '',
@@ -1956,7 +1956,7 @@ __webpack_require__.r(__webpack_exports__);
       }).catch(function (error) {
         _this6.$swal("Something is wrong! You can't edit this board");
       });
-      this.showEditModal = true;
+      this.editBoardModal = true;
     },
     confirmDelete: function confirmDelete(id) {
       var _this7 = this;
@@ -1970,7 +1970,7 @@ __webpack_require__.r(__webpack_exports__);
       }).catch(function (error) {
         _this7.$swal("Something is wrong! You can't delete this board");
       });
-      this.showDeleteModal = true;
+      this.deleteBoardModal = true;
     },
     deleteBoard: function deleteBoard(id) {
       var _this8 = this;
@@ -1981,7 +1981,7 @@ __webpack_require__.r(__webpack_exports__);
         },
         _method: 'delete'
       }).then(function (response) {
-        _this8.showDeleteModal = false;
+        _this8.deleteBoardModal = false;
 
         var index = _this8.boards.data.findIndex(function (board) {
           return board.id === id;
@@ -1991,7 +1991,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this8.showDeleted = true;
       }).catch(function (error) {
-        _this8.$swal("Something is wrong! We're not able to delete the board.");
+        console.log(error); // this.$swal("Something is wrong! We're not able to delete the board.");
       });
     },
     onUpdate: function onUpdate(id) {
@@ -2004,7 +2004,7 @@ __webpack_require__.r(__webpack_exports__);
         },
         _method: 'patch'
       }).then(function (response) {
-        _this9.showEditModal = false;
+        _this9.editBoardModal = false;
         Event.$emit('updated');
       }).catch(function (error) {
         _this9.errors.record(error.response.data.errors);
@@ -2056,8 +2056,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/boards/' + this.board_id + '/ideas', this.$data).then(function (response) {
         _this.id = response.data.id;
+        Event.$emit('created');
       });
-    }, 2000),
+    }, 1000),
     updateIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
       if (this.title && this.description && this.title.length && this.description.length !== 0) {
         if (this.id) {
@@ -2067,7 +2068,7 @@ __webpack_require__.r(__webpack_exports__);
           this.addIdea();
         }
       }
-    }, 2000)
+    }, 1500)
   }
 });
 
@@ -2083,6 +2084,23 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BBIdea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/BBIdea */ "./resources/js/components/BBIdea.vue");
+/* harmony import */ var _components_BBModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/BBModal */ "./resources/js/components/BBModal.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2097,17 +2115,65 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['board', 'board-ideas'],
+  props: ['board'],
   data: function data() {
     return {
-      ideas: this.boardIdeas,
-      idea: {}
+      ideas: [],
+      idea: {},
+      editId: '',
+      editIndex: '',
+      deleteIdeaModal: false,
+      showDeleted: false
     };
+  },
+  mounted: function mounted() {
+    this.getIdeas();
+  },
+  created: function created() {
+    var _this = this;
+
+    Event.$on('created', function () {
+      return _this.getIdeas();
+    });
   },
   methods: {
     createIdea: function createIdea() {
       this.ideas.unshift(this.idea);
+    },
+    getIdeas: function getIdeas() {
+      var _this2 = this;
+
+      axios.get('/boards/' + this.board.id + '/ideas').then(function (response) {
+        _this2.ideas = response.data;
+      });
+    },
+    confirmDelete: function confirmDelete(id, index) {
+      var _this3 = this;
+
+      axios.get('/boards/' + this.board.id + '/ideas/' + id + '/edit').then(function (response) {
+        _this3.editId = id;
+        _this3.editIndex = index;
+      }).catch(function (error) {
+        _this3.$swal("Something is wrong! You can't delete this idea");
+      });
+      this.deleteIdeaModal = true;
+    },
+    deleteIdea: function deleteIdea(id) {
+      var _this4 = this;
+
+      axios.delete('/boards/' + this.board.id + '/ideas/' + id).then(function (response) {
+        _this4.deleteIdeaModal = false;
+
+        _this4.$delete(_this4.ideas, _this4.editIndex);
+
+        _this4.editId = '';
+        _this4.editIndex = '';
+        _this4.showDeleted = true;
+      }).catch(function (error) {
+        _this4.$swal("Something is wrong! We're not able to delete the board.");
+      });
     }
   }
 });
@@ -73603,13 +73669,13 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.showEditModal,
-              expression: "showEditModal"
+              value: _vm.editBoardModal,
+              expression: "editBoardModal"
             }
           ],
           on: {
             close: function($event) {
-              _vm.showEditModal = false
+              _vm.editBoardModal = false
             }
           }
         },
@@ -73709,13 +73775,13 @@ var render = function() {
             {
               name: "show",
               rawName: "v-show",
-              value: _vm.showDeleteModal,
-              expression: "showDeleteModal"
+              value: _vm.deleteBoardModal,
+              expression: "deleteBoardModal"
             }
           ],
           on: {
             close: function($event) {
-              _vm.showDeleteModal = false
+              _vm.deleteBoardModal = false
             }
           }
         },
@@ -73767,7 +73833,7 @@ var render = function() {
                 attrs: { type: "submit" },
                 on: {
                   click: function($event) {
-                    _vm.showDeleteModal = false
+                    _vm.deleteBoardModal = false
                   }
                 }
               },
@@ -74097,50 +74163,146 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "row justify-content-center mb-3" }, [
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "row justify-content-center mb-3" }, [
+        _c(
+          "a",
+          {
+            staticClass: "button-outline green-border idea-btn",
+            attrs: { href: "#" },
+            on: {
+              click: function($event) {
+                _vm.createIdea()
+              }
+            }
+          },
+          [_vm._v("New Idea")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm.deleteIdeaModal
+        ? _c(
+            "bb-modal",
+            {
+              attrs: { deleteIdeaModal: _vm.deleteIdeaModal },
+              on: {
+                close: function($event) {
+                  _vm.deleteIdeaModal = false
+                }
+              }
+            },
+            [
+              _c(
+                "h5",
+                {
+                  staticClass: "modal-title",
+                  attrs: { slot: "title" },
+                  slot: "title"
+                },
+                [_vm._v("Delete Idea")]
+              ),
+              _vm._v(" "),
+              [
+                _c("p", { staticClass: "mb-3" }, [
+                  _c("b", [
+                    _vm._v("Are you sure you want to delete this idea?")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.deleteIdea(_vm.editId)
+                      }
+                    }
+                  },
+                  [_vm._v("Delete")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-gray",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        _vm.deleteIdeaModal = false
+                      }
+                    }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ]
+            ],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
-        "a",
+        "b-alert",
         {
-          staticClass: "button-outline green-border idea-btn",
-          attrs: { href: "#" },
+          staticClass: "fade-el",
+          attrs: { variant: "danger", dismissible: "", show: _vm.showDeleted },
           on: {
-            click: function($event) {
-              _vm.createIdea()
+            dismissed: function($event) {
+              _vm.showDeleted = false
             }
           }
         },
-        [_vm._v("New Idea")]
+        [_vm._v("\n        You have successfully deleted the idea!\n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "row d-flex bg-lightgray p-3 pt-lg-5 mt-4 rounded gray-border justify-content-around"
+        },
+        _vm._l(_vm.ideas, function(idea, index) {
+          return _c(
+            "div",
+            { key: idea.id, staticClass: "idea-list" },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "delete-idea-btn",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      _vm.confirmDelete(idea.id, index)
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fas fa-times" })]
+              ),
+              _vm._v(" "),
+              _c("bb-idea", {
+                attrs: {
+                  idea: idea,
+                  index: index,
+                  unique: idea.id,
+                  ideaTitle: idea.title,
+                  ideaDescription: idea.description,
+                  boardId: _vm.board.id
+                }
+              })
+            ],
+            1
+          )
+        }),
+        0
       )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass:
-          "row d-flex bg-lightgray p-3 pt-lg-5 mt-4 rounded gray-border justify-content-around"
-      },
-      _vm._l(_vm.ideas, function(idea) {
-        return _c(
-          "div",
-          { key: idea.id },
-          [
-            _c("bb-idea", {
-              attrs: {
-                idea: idea,
-                unique: idea.id,
-                ideaTitle: idea.title,
-                ideaDescription: idea.description,
-                boardId: _vm.board.id
-              }
-            })
-          ],
-          1
-        )
-      }),
-      0
-    )
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -85637,8 +85799,9 @@ var app = new Vue({
   el: '#app',
   data: {
     showModal: false,
-    showEditModal: false,
-    showDeleteModal: false
+    editBoardModal: false,
+    deleteBoardModal: false,
+    deleteIdeaModal: false
   }
 });
 

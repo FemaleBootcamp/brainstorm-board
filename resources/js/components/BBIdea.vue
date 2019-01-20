@@ -32,8 +32,9 @@
                 axios.post('/boards/' + this.board_id + '/ideas', this.$data)
                     .then((response) => {
                         this.id = response.data.id;
+                        Event.$emit('created');
                     });
-            }, 2000),
+            }, 1000),
             updateIdea: _.debounce(function (id) {
                 if ((this.title && this.description) && (this.title.length && this.description.length !== 0)) {
                     if (this.id) {
@@ -43,7 +44,7 @@
                         this.addIdea();
                     }
                 }
-            }, 2000)
+            }, 1500)
         }
 
     };

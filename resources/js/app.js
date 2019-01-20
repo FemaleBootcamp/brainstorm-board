@@ -14,8 +14,10 @@ const app = new Vue({
 
     data: {
         showModal: false,
-        showEditModal: false,
-        showDeleteModal: false
+        editBoardModal: false,
+        deleteBoardModal: false,
+        deleteIdeaModal: false
+        
     }
 
 });

@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Edit Modal -->
-        <bb-modal v-show="showEditModal" @close="showEditModal = false">
+        <bb-modal v-show="editBoardModal" @close="editBoardModal = false">
             <h5 class="modal-title" slot="title">Edit board</h5>
             <template>
                 <form method="POST" action="/boards" @submit.prevent="onUpdate(board.id)" @keydown="errors.clear($event.target.name)">
@@ -17,13 +17,13 @@
         </bb-modal>
         <!-- Edit Modal End -->
         <!-- Delete Modal Start -->
-        <bb-modal v-show="showDeleteModal" @close="showDeleteModal = false">
+        <bb-modal v-show="deleteBoardModal" @close="deleteBoardModal = false">
             <h5 class="modal-title" slot="title">Delete board</h5>
             <template>
                 <p class="mb-0"><b>Are you sure you want to delete he the board {{ board.title }}?</b></p>
                 <p>This action is permanent and it cannot be undone.</p>
                 <button type="submit" class="btn btn-danger" @click.prevent="deleteBoard(board.id)">Delete</button>
-                <button type="submit" class="btn btn-gray" @click="showDeleteModal = false">Cancel</button>
+                <button type="submit" class="btn btn-gray" @click="deleteBoardModal = false">Cancel</button>
             </template>
         </bb-modal>
         <!-- Delete Modal ENd -->
@@ -91,13 +91,12 @@
         data() {
 
             return {
-
                 boards: {},
                 board: {},
                 showDeleted: false,
                 showAdded: false,
-                showEditModal: false,
-                showDeleteModal: false,
+                editBoardModal: false,
+                deleteBoardModal: false,
                 showUpdated: false,
                 title: '',
                 date: '',
@@ -177,7 +176,7 @@
                 }).catch(error => {
                     this.$swal("Something is wrong! You can't edit this board");
                 });
-                this.showEditModal = true;
+                this.editBoardModal = true;
             },
             confirmDelete(id) {
                 axios.get(`/boards/${id}/edit`, {
@@ -189,7 +188,7 @@
                 }).catch(error => {
                     this.$swal("Something is wrong! You can't delete this board");
                 });
-                this.showDeleteModal = true;
+                this.deleteBoardModal = true;
             },
             deleteBoard(id) {
                 axios.post(`/boards/${id}`, {
@@ -198,12 +197,13 @@
                     },
                     _method: 'delete'
                 }).then((response) => {
-                    this.showDeleteModal = false;
+                    this.deleteBoardModal = false;
                     let index = this.boards.data.findIndex(board => board.id === id);
                     this.boards.data.splice(index, 1);
                     this.showDeleted = true;
                 }).catch(error => {
-                    this.$swal("Something is wrong! We're not able to delete the board.");
+                    console.log(error);
+                    // this.$swal("Something is wrong! We're not able to delete the board.");
                 });
 
             },
@@ -215,7 +215,7 @@
                     },
                     _method: 'patch'
                 }).then(response => {
-                    this.showEditModal = false;
+                    this.editBoardModal = false;
                     Event.$emit('updated');
                 }).catch(error => {
                     this.errors.record(error.response.data.errors);
