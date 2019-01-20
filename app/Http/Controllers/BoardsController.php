@@ -31,7 +31,7 @@ class BoardsController extends Controller
         $q = Board::all();
         $boards = Board::when($param, function ($q, $param) {
             return $this->filter($q, $param);
-        })->with('user')->orderBy('created_at', 'id')->paginate(20)->appends(request('page'));
+        })->with('user')->latest()->paginate(20)->appends(request('page'));
         return response()->json($boards);
     }
 

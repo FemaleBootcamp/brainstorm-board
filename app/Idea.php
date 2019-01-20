@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Idea extends Model
 {
-    public $timestamps = false;
 
     protected $fillable = ['title', 'description', 'user_id', 'board_id'];
 

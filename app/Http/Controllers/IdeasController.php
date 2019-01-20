@@ -18,9 +18,10 @@ class IdeasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-
+        $ideas = Idea::where('board_id', '=', $id)->latest()->get();
+        return response()->json($ideas);
     }
 
     /**
@@ -67,9 +68,10 @@ class IdeasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($boardId, $ideaId)
     {
-        
+        $idea = Idea::findOrFail($ideaId);
+        return response()->json($idea);
     }
 
     /**
@@ -92,8 +94,9 @@ class IdeasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($boardId, $ideaId)
     {
-        //
+        Idea::findOrFail($ideaId)->delete();
+        return response()->json(['status' => 'success'], 204);
     }
 }

@@ -9828,8 +9828,12 @@ a.text-dark:focus {
   padding: 0.6rem;
 }
 
-#dashboard-page .is-active {
+.is-active {
   display: block;
+}
+
+.is-active .btn-gray {
+  color: #818181 !important;
 }
 
 .modal-content {
@@ -9891,39 +9895,60 @@ a.text-dark:focus {
   color: #ff4d96;
 }
 
-#board-page .btn-title {
+#idea-page .btn-title {
   transition: all 0.2s ease-in;
   cursor: pointer;
   color: white;
   text-decoration: none;
 }
 
-#board-page .btn-title h4:hover span {
+#idea-page .btn-title h4:hover span {
   display: none;
 }
 
-#board-page .btn-title h4:hover:before,
-#board-page .btn-title h4:hover:active {
+#idea-page .btn-title h4:hover:before,
+#idea-page .btn-title h4:hover:active {
   content: "Back to boards ";
 }
 
-#board-page .sticky-notes textarea {
+#idea-page .sticky-notes textarea {
   background: transparent;
   border: none;
 }
 
-#board-page .sticky-notes textarea:focus {
+#idea-page .sticky-notes textarea:focus {
   outline: none;
 }
 
-#board-page .sticky-notes:focus-within {
+#idea-page .sticky-notes:focus-within {
   transition: all 0.2s ease-in;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-#board-page .idea-btn {
+#idea-page .idea-btn {
   -webkit-animation: wobble 0.8s 1.5s 2 both;
   animation: wobble 0.8s 1.5s 2 both;
+}
+
+#idea-page .idea-list {
+  position: relative;
+}
+
+#idea-page .idea-list .delete-idea-btn {
+  position: absolute;
+  left: 91%;
+  top: 3%;
+  z-index: 500;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease-in;
+}
+
+#idea-page .idea-list .delete-idea-btn:hover,
+#idea-page .idea-list .delete-idea-btn:active,
+#idea-page .idea-list .delete-idea-btn:focus {
+  color: rgba(255, 255, 255, 0.8);
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
 
 body {

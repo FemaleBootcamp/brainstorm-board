@@ -340,12 +340,15 @@
     .table-sm td {
         padding: 0.6rem;
     }
-
-    .is-active {
-        display: block;
-    }
-
 }
+
+.is-active {
+    display: block;
+    .btn-gray{
+        color: #818181!important;
+    }
+}
+
 
 .modal-content {
     border-radius: $border-radius;
@@ -411,10 +414,10 @@
 // **************
 
 // *************
-// Board Page Start
+// Idea Page Start
 // **************
 
-#board-page {
+#idea-page {
 
     .btn-title{
         transition: all 0.2s ease-in;
@@ -451,8 +454,26 @@
         animation: wobble 0.8s 1.5s 2 both;
     }
 
+    .idea-list{
+        position: relative;
+
+        .delete-idea-btn{
+            position: absolute;
+            left: 91%;
+            top: 3%;
+            z-index: 500;
+            color: rgba(255,255,255,.5);
+            transition: all 0.2s ease-in;
+            &:hover, &:active, &:focus{
+                color: rgba(255,255,255,.8);
+                transform: scale(1.1);  
+            }
+        }
+
+    }
+
 }
 
 // *************
-// Board Page End
+// Idea Page End
 // **************
