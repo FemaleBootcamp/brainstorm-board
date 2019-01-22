@@ -39,6 +39,11 @@ return [
             'channels' => ['daily'],
         ],
 
+        'staging' => [
+            'driver' => 'stack',
+            'channels' => ['daily', 'bugsnag'],
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
@@ -87,6 +92,10 @@ return [
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
+        ],
+
+        'bugsnag' => [
+            'driver' => 'bugsnag',
         ],
     ],
 
