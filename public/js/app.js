@@ -1768,6 +1768,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _models_Board__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/Board */ "./resources/js/models/Board.js");
 /* harmony import */ var _models_Errors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/Errors */ "./resources/js/models/Errors.js");
 /* harmony import */ var _components_BBModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/BBModal */ "./resources/js/components/BBModal.vue");
+/* harmony import */ var _components_BBLoader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/BBLoader */ "./resources/js/components/BBLoader.vue");
 //
 //
 //
@@ -1850,6 +1851,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -1859,6 +1874,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       boards: {},
       board: {},
+      loader: false,
+      checkBoards: false,
       showDeleted: false,
       showAdded: false,
       editBoardModal: false,
@@ -1893,11 +1910,13 @@ __webpack_require__.r(__webpack_exports__);
     Event.$on('submit', function () {
       return _this.getBoards();
     });
-    Event.$on('updated', function () {
-      return _this.getBoards();
-    });
     Event.$on('submit', function () {
       return _this.showAdded = true;
+    });
+    Event.$on('updated', function () {
+      return _models_Board__WEBPACK_IMPORTED_MODULE_1__["default"].all(function (boards) {
+        return _this.boards = boards;
+      });
     });
     Event.$on('updated', function () {
       return _this.showUpdated = true;
@@ -1907,9 +1926,16 @@ __webpack_require__.r(__webpack_exports__);
     getBoards: function getBoards() {
       var _this2 = this;
 
-      _models_Board__WEBPACK_IMPORTED_MODULE_1__["default"].all(function (boards) {
-        return _this2.boards = boards;
+      this.loader = true;
+      axios.get('/boards').then(function (response) {
+        _this2.loader = false;
+        _this2.boards = response.data;
+
+        _this2.checkBoardsStatus(_this2.boards.data.length);
       });
+    },
+    checkBoardsStatus: function checkBoardsStatus(length) {
+      length == 0 ? this.checkBoards = true : this.checkBoards = false;
     },
     onChange: function onChange(param) {
       var _this3 = this;
@@ -1990,8 +2016,10 @@ __webpack_require__.r(__webpack_exports__);
         _this8.boards.data.splice(index, 1);
 
         _this8.showDeleted = true;
+
+        _this8.checkBoardsStatus(_this8.boards.data.length);
       }).catch(function (error) {
-        console.log(error); // this.$swal("Something is wrong! We're not able to delete the board.");
+        _this8.$swal("Something is wrong! We're not able to delete the board.");
       });
     },
     onUpdate: function onUpdate(id) {
@@ -2039,6 +2067,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["idea", "boardId", "unique", "ideaTitle", "ideaDescription"],
@@ -2047,7 +2078,8 @@ __webpack_require__.r(__webpack_exports__);
       title: this.ideaTitle,
       description: this.ideaDescription,
       board_id: this.boardId,
-      id: this.unique
+      id: this.unique,
+      saved: false
     };
   },
   methods: {
@@ -2056,7 +2088,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/boards/' + this.board_id + '/ideas', this.$data).then(function (response) {
         _this.id = response.data.id;
-        Event.$emit('created');
+        Event.$emit('created', _this.saved = true);
       });
     }, 1000),
     updateIdea: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (id) {
@@ -2085,6 +2117,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_BBIdea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/BBIdea */ "./resources/js/components/BBIdea.vue");
 /* harmony import */ var _components_BBModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/BBModal */ "./resources/js/components/BBModal.vue");
+/* harmony import */ var _components_BBLoader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/BBLoader */ "./resources/js/components/BBLoader.vue");
 //
 //
 //
@@ -2114,6 +2147,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2122,6 +2165,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       ideas: [],
       idea: {},
+      loader: false,
+      checkIdeas: false,
       editId: '',
       editIndex: '',
       deleteIdeaModal: false,
@@ -2134,19 +2179,27 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    Event.$on('created', function () {
-      return _this.getIdeas();
+    Event.$on('created', function (saved) {
+      return _this.getIdeas(saved);
     });
   },
   methods: {
     createIdea: function createIdea() {
+      this.checkIdeas = false;
       this.ideas.unshift(this.idea);
     },
-    getIdeas: function getIdeas() {
+    checkIdeasStatus: function checkIdeasStatus(length) {
+      length == 0 ? this.checkIdeas = true : this.checkIdeas = false;
+    },
+    getIdeas: function getIdeas(saved) {
       var _this2 = this;
 
+      saved ? this.loader = false : this.loader = true;
       axios.get('/boards/' + this.board.id + '/ideas').then(function (response) {
+        _this2.loader = false;
         _this2.ideas = response.data;
+
+        _this2.checkIdeasStatus(_this2.ideas.length);
       });
     },
     confirmDelete: function confirmDelete(id, index) {
@@ -2171,12 +2224,40 @@ __webpack_require__.r(__webpack_exports__);
         _this4.editId = '';
         _this4.editIndex = '';
         _this4.showDeleted = true;
+
+        _this4.checkIdeasStatus(_this4.ideas.length);
       }).catch(function (error) {
         _this4.$swal("Something is wrong! We're not able to delete the board.");
       });
     }
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/BBLoader.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/BBLoader.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -73800,7 +73881,7 @@ var render = function() {
             _c("p", { staticClass: "mb-0" }, [
               _c("b", [
                 _vm._v(
-                  "Are you sure you want to delete he the board " +
+                  "Are you sure you want to delete the board " +
                     _vm._s(_vm.board.title) +
                     "?"
                 )
@@ -73960,66 +74041,98 @@ var render = function() {
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.boards.data, function(board) {
-              return _c("tr", { key: board.id }, [
-                _c("td", { attrs: { title: _vm.title } }, [
-                  _vm._v(_vm._s(board.title))
-                ]),
-                _vm._v(" "),
-                _c("td", { attrs: { date: _vm.date } }, [
-                  _vm._v(_vm._s(_vm.formatDate(board.created_at)))
-                ]),
-                _vm._v(" "),
-                _c("td", { attrs: { user: _vm.user } }, [
-                  _vm._v(_vm._s(board.user.name))
-                ]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "a",
+            [
+              _c(
+                "tr",
+                {
+                  directives: [
                     {
-                      staticClass: "btn btn-primary btn-sm",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.viewBoard(board.id)
-                        }
-                      }
-                    },
-                    [_vm._v("View")]
-                  ),
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.loader,
+                      expression: "loader"
+                    }
+                  ]
+                },
+                [_c("td", { attrs: { colspan: "4" } }, [_c("bb-loader")], 1)]
+              ),
+              _vm._v(" "),
+              _c(
+                "tr",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.checkBoards,
+                      expression: "checkBoards"
+                    }
+                  ]
+                },
+                [_vm._m(1)]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.boards.data, function(board) {
+                return _c("tr", { key: board.id }, [
+                  _c("td", { attrs: { title: _vm.title } }, [
+                    _vm._v(_vm._s(board.title))
+                  ]),
                   _vm._v(" "),
-                  _c(
-                    "a",
-                    {
-                      staticClass: "btn btn-blue btn-sm",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.editBoard(board.id)
-                        }
-                      }
-                    },
-                    [_vm._v("Edit")]
-                  ),
+                  _c("td", { attrs: { date: _vm.date } }, [
+                    _vm._v(_vm._s(_vm.formatDate(board.created_at)))
+                  ]),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger btn-sm",
-                      attrs: { type: "submit" },
-                      on: {
-                        click: function($event) {
-                          _vm.confirmDelete(board.id)
+                  _c("td", { attrs: { user: _vm.user } }, [
+                    _vm._v(_vm._s(board.user.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-primary btn-sm",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            _vm.viewBoard(board.id)
+                          }
                         }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  )
+                      },
+                      [_vm._v("View")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-blue btn-sm",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            _vm.editBoard(board.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Edit")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm",
+                        attrs: { type: "submit" },
+                        on: {
+                          click: function($event) {
+                            _vm.confirmDelete(board.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Delete")]
+                    )
+                  ])
                 ])
-              ])
-            }),
-            0
+              })
+            ],
+            2
           ),
           _vm._v(" "),
           _c("tfoot")
@@ -74050,6 +74163,16 @@ var staticRenderFns = [
         _c("th", { staticClass: "th-sm" }, [_vm._v("Options")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "4" } }, [
+      _c("p", { staticClass: "bg-gray py-3 rounded" }, [
+        _vm._v("There aren't any boards yet.")
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -74073,72 +74196,93 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card sticky-notes mb-5" }, [
+  return _c("div", [
     _c(
-      "form",
+      "span",
       {
-        attrs: { method: "POST", action: "/ideas" },
-        on: {
-          keyup: function($event) {
-            $event.preventDefault()
-            _vm.updateIdea(_vm.idea.id)
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.saved,
+            expression: "saved"
           }
-        }
+        ],
+        staticClass: "saved-notice"
       },
-      [
-        _c("div", { staticClass: "card-header bg-primary" }, [
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.title,
-                expression: "title"
-              }
-            ],
-            staticClass: "bold white",
-            attrs: { name: "title", cols: "30", rows: "1" },
-            domProps: { value: _vm.title, textContent: _vm._s(_vm.idea.title) },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.title = $event.target.value
-              }
+      [_c("i", { staticClass: "fas fa-thumbs-up" }), _vm._v(" saved!")]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "card sticky-notes mb-5" }, [
+      _c(
+        "form",
+        {
+          attrs: { method: "POST", action: "/ideas" },
+          on: {
+            keyup: function($event) {
+              $event.preventDefault()
+              _vm.updateIdea(_vm.idea.id)
             }
-          })
-        ]),
-        _vm._v(" "),
-        _c("ul", { staticClass: "list-group list-group-flush" }, [
-          _c("li", { staticClass: "list-group-item" }, [
+          }
+        },
+        [
+          _c("div", { staticClass: "card-header bg-primary" }, [
             _c("textarea", {
               directives: [
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.description,
-                  expression: "description"
+                  value: _vm.title,
+                  expression: "title"
                 }
               ],
-              attrs: { name: "description", cols: "30", rows: "8" },
+              staticClass: "bold white",
+              attrs: { name: "title", cols: "30", rows: "1" },
               domProps: {
-                value: _vm.description,
-                textContent: _vm._s(_vm.idea.description)
+                value: _vm.title,
+                textContent: _vm._s(_vm.idea.title)
               },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.description = $event.target.value
+                  _vm.title = $event.target.value
                 }
               }
             })
+          ]),
+          _vm._v(" "),
+          _c("ul", { staticClass: "list-group list-group-flush" }, [
+            _c("li", { staticClass: "list-group-item" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.description,
+                    expression: "description"
+                  }
+                ],
+                attrs: { name: "description", cols: "30", rows: "8" },
+                domProps: {
+                  value: _vm.description,
+                  textContent: _vm._s(_vm.idea.description)
+                },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.description = $event.target.value
+                  }
+                }
+              })
+            ])
           ])
-        ])
-      ]
-    )
+        ]
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -74263,48 +74407,139 @@ var render = function() {
         "div",
         {
           staticClass:
-            "row d-flex bg-lightgray p-3 pt-lg-5 mt-4 rounded gray-border justify-content-around"
+            "row d-flex bg-lightgray p-3 pt-5  mt-4 rounded gray-border justify-content-around"
         },
-        _vm._l(_vm.ideas, function(idea, index) {
-          return _c(
+        [
+          _c(
             "div",
-            { key: idea.id, staticClass: "idea-list" },
-            [
-              _c(
-                "a",
+            {
+              directives: [
                 {
-                  staticClass: "delete-idea-btn",
-                  attrs: { href: "#" },
-                  on: {
-                    click: function($event) {
-                      _vm.confirmDelete(idea.id, index)
-                    }
-                  }
-                },
-                [_c("i", { staticClass: "fas fa-times" })]
-              ),
-              _vm._v(" "),
-              _c("bb-idea", {
-                attrs: {
-                  idea: idea,
-                  index: index,
-                  unique: idea.id,
-                  ideaTitle: idea.title,
-                  ideaDescription: idea.description,
-                  boardId: _vm.board.id
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.loader,
+                  expression: "loader"
                 }
-              })
-            ],
+              ],
+              staticClass: "col-12 mb-4"
+            },
+            [_c("bb-loader")],
             1
-          )
-        }),
-        0
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.checkIdeas,
+                  expression: "checkIdeas"
+                }
+              ],
+              staticClass: "col-12"
+            },
+            [
+              _c("p", { staticClass: "bg-gray py-3 rounded text-center" }, [
+                _vm._v("There aren't any ideas yet.")
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.ideas, function(idea, index) {
+            return _c(
+              "div",
+              { key: idea.id, staticClass: "idea-list" },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "delete-idea-btn",
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        _vm.confirmDelete(idea.id, index)
+                      }
+                    }
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                ),
+                _vm._v(" "),
+                _c("bb-idea", {
+                  attrs: {
+                    idea: idea,
+                    index: index,
+                    unique: idea.id,
+                    ideaTitle: idea.title,
+                    ideaDescription: idea.description,
+                    boardId: _vm.board.id
+                  }
+                })
+              ],
+              1
+            )
+          })
+        ],
+        2
       )
     ],
     1
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "loader" }, [
+      _c("div", { staticClass: "bulb one" }, [
+        _c("i", {
+          staticClass: "far fa-lightbulb",
+          attrs: { "aria-hidden": "true" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "bulb two" }, [
+        _c("i", {
+          staticClass: "far fa-lightbulb",
+          attrs: { "aria-hidden": "true" }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "bulb three" }, [
+        _c("i", {
+          staticClass: "far fa-lightbulb",
+          attrs: { "aria-hidden": "true" }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -85793,6 +86028,7 @@ Vue.component('bb-modal', __webpack_require__(/*! ./components/BBModal.vue */ ".
 Vue.component('bb-data-table', __webpack_require__(/*! ./components/BBDataTable.vue */ "./resources/js/components/BBDataTable.vue").default);
 Vue.component('bb-idea', __webpack_require__(/*! ./components/BBIdea.vue */ "./resources/js/components/BBIdea.vue").default);
 Vue.component('bb-ideas-list', __webpack_require__(/*! ./components/BBIdeasList.vue */ "./resources/js/components/BBIdeasList.vue").default);
+Vue.component('bb-loader', __webpack_require__(/*! ./components/BBLoader.vue */ "./resources/js/components/BBLoader.vue").default);
 Vue.component('pagination', __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.common.js"));
 window.Event = new Vue();
 var app = new Vue({
@@ -86056,6 +86292,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BBIdeasList_vue_vue_type_template_id_65362682___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BBIdeasList_vue_vue_type_template_id_65362682___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/BBLoader.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/BBLoader.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BBLoader.vue?vue&type=template&id=10ad7784& */ "./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784&");
+/* harmony import */ var _BBLoader_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BBLoader.vue?vue&type=script&lang=js& */ "./resources/js/components/BBLoader.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _BBLoader_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/BBLoader.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/BBLoader.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/BBLoader.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BBLoader_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./BBLoader.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/BBLoader.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BBLoader_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./BBLoader.vue?vue&type=template&id=10ad7784& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/BBLoader.vue?vue&type=template&id=10ad7784&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BBLoader_vue_vue_type_template_id_10ad7784___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
