@@ -2,6 +2,172 @@
 // Welcome Page Start
 // **************
 
+// loader
+
+.loader {
+    display: flex;
+    justify-content: center;
+
+    .bulb {
+        margin: 0 15px;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #fff;
+        text-align: center;
+        border: 1px solid #eaeaea;
+
+        i {
+            font-size: 25px;
+            position: relative;
+            top: 4px;
+        }
+    }
+
+    .one {
+        margin-right: -18px;
+        transform-origin: center left;
+        animation: bulb 2s linear infinite;
+        color: $magenta;
+    }
+
+    .two {
+        transform-origin: center right;
+        animation: bulb2 2s linear infinite;
+        animation-delay: .1s;
+        color: $blue;
+    }
+
+    .three {
+        transform-origin: center right;
+        animation: bulb3 2s linear infinite;
+        animation-delay: .2s;
+        color: $turquoise;
+    }
+
+}
+
+
+@keyframes bulb {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(360deg);
+    }
+
+    30% {
+        transform: rotate(370deg);
+    }
+
+    35% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes bulb2 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(0deg);
+    }
+
+    30% {
+        transform: rotate(-180deg);
+    }
+
+    35% {
+        transform: rotate(-190deg);
+    }
+
+    40% {
+        transform: rotate(-180deg);
+    }
+
+    78% {
+        transform: rotate(-180deg);
+    }
+
+    95% {
+        transform: rotate(-360deg);
+    }
+
+    98% {
+        transform: rotate(-370deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes bulb3 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    27% {
+        transform: rotate(0deg);
+    }
+
+    40% {
+        transform: rotate(180deg);
+    }
+
+    45% {
+        transform: rotate(190deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    62% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(360deg);
+    }
+
+    80% {
+        transform: rotate(370deg);
+    }
+
+    85% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+// loader end
+
+// vue transition
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+// end vue transition
+
 .fade-el {
     -webkit-animation: fade-in-top .9s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
     animation: fade-in-top .9s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
@@ -344,11 +510,16 @@
 
 .is-active {
     display: block;
-    .btn-gray{
-        color: #818181!important;
+    background: rgba(0, 0, 0, .5);
+
+    .btn-gray {
+        color: #818181 !important;
     }
 }
 
+.modal-backdrop {
+    opacity: 0.8;
+}
 
 .modal-content {
     border-radius: $border-radius;
@@ -419,32 +590,46 @@
 
 #idea-page {
 
-    .btn-title{
+    .btn-title {
         transition: all 0.2s ease-in;
         cursor: pointer;
         color: white;
         text-decoration: none;
-        h4{
-            &:hover span{
+
+        h4 {
+            &:hover span {
                 display: none;
             }
+
             &:hover:before,
-            &:hover:active{
+            &:hover:active {
                 content: 'Back to boards ';
             }
         }
     }
 
-    .sticky-notes{
+    .saved-notice {
+        background: $turquoise;
+        pointer-events: absolute;
+        position: absolute;
+        color: white;
+        padding: 2px 7px 5px 7px;
+        border-radius: 15px;
+        top: -10%;
+        left: 2%;
+    }
+
+    .sticky-notes {
         textarea {
             background: transparent;
             border: none;
-            &:focus{
+
+            &:focus {
                 outline: none;
             }
         }
 
-        &:focus-within{
+        &:focus-within {
             @include on-focus-shadow;
         }
     }
@@ -454,19 +639,22 @@
         animation: wobble 0.8s 1.5s 2 both;
     }
 
-    .idea-list{
+    .idea-list {
         position: relative;
 
-        .delete-idea-btn{
+        .delete-idea-btn {
             position: absolute;
             left: 91%;
             top: 3%;
             z-index: 500;
-            color: rgba(255,255,255,.5);
+            color: rgba(255, 255, 255, .5);
             transition: all 0.2s ease-in;
-            &:hover, &:active, &:focus{
-                color: rgba(255,255,255,.8);
-                transform: scale(1.1);  
+
+            &:hover,
+            &:active,
+            &:focus {
+                color: rgba(255, 255, 255, .8);
+                transform: scale(1.1);
             }
         }
 
